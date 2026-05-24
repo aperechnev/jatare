@@ -22,7 +22,7 @@ export default function FrontPage() {
 
       <div className="flex flex-col gap-7">
 
-        <p className="text-sm font-medium text-gray-700 text-center">
+        <p className="text-sm font-light text-gray-700 text-center">
           Enter your wallet address to analyse your portfolio.
         </p>
 
