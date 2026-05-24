@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getArbitrumTokenTransfers } from "@/api/arbitrum"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { getTokens, getPrices } from "@/api/portfolioApi"
 
 export function groupTokens(address: string, transfers: any[]) {
   const map = new Map()
@@ -8,7 +16,7 @@ export function groupTokens(address: string, transfers: any[]) {
   const addr = address.toLowerCase()
 
   for (const tx of transfers) {
-    const key = tx.contractAddress
+    const key = tx.contractAddress?.toLowerCase()
 
     if (!map.has(key)) {
       map.set(key, {
@@ -25,8 +33,10 @@ export function groupTokens(address: string, transfers: any[]) {
     const value =
       Number(tx.value) / Math.pow(10, token.decimals)
 
-    const from = tx.from.toLowerCase()
-    const to = tx.to.toLowerCase()
+    const from = (tx.from || "").toLowerCase()
+    const to = (tx.to || "").toLowerCase()
+
+    if (!from || !to) continue
 
     // incoming
     if (to === addr) {
@@ -39,7 +49,9 @@ export function groupTokens(address: string, transfers: any[]) {
     }
   }
 
-  return Array.from(map.values()).filter(t => t.balance > 0)
+  return Array.from(map.values())
+    .filter(t => t.balance > 0)
+    .sort((a, b) => b.balance - a.balance)
 }
 
 export default function PortfolioPage() {
@@ -47,13 +59,19 @@ export default function PortfolioPage() {
   const [tokens, setTokens] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
 
+  const [prices, setPrices] = useState<Record<string, any>>({})
+  const [total, setTotal] = useState(0)
+
+
+  console.log(import.meta.env)
+
   useEffect(() => {
     if (!address) return
 
     async function load() {
       setLoading(true)
 
-      const data = await getArbitrumTokenTransfers(address)
+      const data = await getTokens(address)
 
       const grouped = groupTokens(address, data)
 
@@ -63,6 +81,31 @@ export default function PortfolioPage() {
 
     load()
   }, [address])
+
+  useEffect(() => {
+    if (!tokens.length) return
+
+    async function loadPrices() {
+      const contracts = tokens.map(t => t.contract)
+
+      const data = await getPrices(contracts)
+
+      setPrices(data)
+    }
+
+    loadPrices()
+  }, [tokens])
+
+  useEffect(() => {
+    let sum = 0
+
+    for (const t of tokens) {
+      const price = prices[t.contract]?.usd || 0
+      sum += t.balance * price
+    }
+
+    setTotal(sum)
+  }, [prices, tokens])
 
   return (
     <main className="min-h-screen p-10">
@@ -74,28 +117,64 @@ export default function PortfolioPage() {
         {address}
       </p>
 
-      {loading && (
-        <p>Loading...</p>
-      )}
+      <div className="mb-6 p-4 border rounded-xl">
+        <div className="text-sm text-zinc-500">
+          Total Portfolio Value
+        </div>
 
-      <div className="space-y-3">
-        {tokens.map((t, i) => (
-          <div key={i} className="border rounded p-3 flex justify-between">
-            <div>
-              <div className="font-bold">
-                {t.symbol}
-              </div>
-              <div className="text-xs text-zinc-500">
-                {t.name}
-              </div>
-            </div>
-
-            <div className="font-mono">
-              {t.balance.toFixed(4)}
-            </div>
-          </div>
-        ))}
+        <div className="text-2xl font-bold">
+          ${total.toFixed(2)}
+        </div>
       </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Token</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="text-right">USD Value</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        {loading && (
+          <div className="space-y-2">
+            <div className="h-6 bg-zinc-200 rounded animate-pulse" />
+            <div className="h-6 bg-zinc-200 rounded animate-pulse" />
+            <div className="h-6 bg-zinc-200 rounded animate-pulse" />
+          </div>
+        )}
+
+        <TableBody>
+          {tokens.map((t, i) => (
+            <TableRow key={i}>
+
+              <TableCell>
+                <div className="font-bold">
+                  {t.symbol}
+                </div>
+                <div className="text-xs text-zinc-500">
+                  {t.name}
+                </div>
+              </TableCell>
+
+              <TableCell className="font-mono text-right">
+                {Number(t.balance).toLocaleString(undefined, {
+                  maximumFractionDigits: 4
+                })}
+              </TableCell>
+
+              <TableCell className="text-right">
+                ${(
+                  t.balance *
+                  (prices[t.contract]?.usd || 0)
+                ).toFixed(2)}
+              </TableCell>
+              
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
     </main>
   )
 }
