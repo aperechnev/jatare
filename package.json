@@ -8,9 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "npm run build && wrangler dev",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@fontsource-variable/noto-sans": "^5.2.10",
@@ -32,6 +32,7 @@
     "wagmi": "^3.6.15"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.38.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.12.4",
     "@types/react": "^19.2.14",
@@ -44,6 +45,7 @@
     "globals": "^17.6.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "wrangler": "^4.94.0"
   }
 }
