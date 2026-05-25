@@ -59,7 +59,7 @@ export default function Header() {
 
         {isConnected && (
           <DropdownMenu>
-            <DropdownMenuTrigger >
+            <DropdownMenuTrigger asChild>
               <Button variant="outline" className="gap-2 bg-transparent border-none">
                 <Wallet className="w-4 h-4" />
                 {address?.slice(0, 6)}...{address?.slice(-4)}

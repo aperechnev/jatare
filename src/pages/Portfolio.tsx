@@ -59,11 +59,8 @@ export default function PortfolioPage() {
   const [tokens, setTokens] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
 
-  const [prices, setPrices] = useState<Record<string, any>>({})
+  const [prices, setPrices] = useState({})
   const [total, setTotal] = useState(0)
-
-
-  console.log(import.meta.env)
 
   useEffect(() => {
     if (!address) return
@@ -86,7 +83,7 @@ export default function PortfolioPage() {
     if (!tokens.length) return
 
     async function loadPrices() {
-      const contracts = tokens.map(t => t.contract)
+      const contracts = tokens.map(t => `arbitrum:${t.contract}`)
 
       const data = await getPrices(contracts)
 
@@ -100,7 +97,7 @@ export default function PortfolioPage() {
     let sum = 0
 
     for (const t of tokens) {
-      const price = prices[t.contract]?.usd || 0
+      const price = prices[`arbitrum:${t.contract}`] || 0
       sum += t.balance * price
     }
 
@@ -131,30 +128,29 @@ export default function PortfolioPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Token</TableHead>
+            <TableHead className="text-right">Price</TableHead>
             <TableHead className="text-right">Amount</TableHead>
             <TableHead className="text-right">USD Value</TableHead>
           </TableRow>
         </TableHeader>
 
-        {loading && (
-          <div className="space-y-2">
-            <div className="h-6 bg-zinc-200 rounded animate-pulse" />
-            <div className="h-6 bg-zinc-200 rounded animate-pulse" />
-            <div className="h-6 bg-zinc-200 rounded animate-pulse" />
-          </div>
-        )}
-
         <TableBody>
           {tokens.map((t, i) => (
             <TableRow key={i}>
 
-              <TableCell>
-                <div className="font-bold">
+              <TableCell className="flex flex-col">
+                <span className="font-bold">
                   {t.symbol}
-                </div>
-                <div className="text-xs text-zinc-500">
+                </span>
+                <span className="text-xs text-zinc-500">
                   {t.name}
-                </div>
+                </span>
+              </TableCell>
+
+              <TableCell className="text-right">
+                ${(
+                  prices[`arbitrum:${t.contract}`] || 0
+                ).toFixed(2)}
               </TableCell>
 
               <TableCell className="font-mono text-right">
@@ -166,10 +162,10 @@ export default function PortfolioPage() {
               <TableCell className="text-right">
                 ${(
                   t.balance *
-                  (prices[t.contract]?.usd || 0)
+                  (prices[`arbitrum:${t.contract}`] || 0)
                 ).toFixed(2)}
               </TableCell>
-              
+
             </TableRow>
           ))}
         </TableBody>
