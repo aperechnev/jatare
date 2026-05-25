@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { Helmet } from "react-helmet-async"
 import {
   Table,
   TableBody,
@@ -105,72 +106,82 @@ export default function PortfolioPage() {
   }, [prices, tokens])
 
   return (
-    <main className="min-h-screen p-10">
-      <h1 className="text-2xl font-bold mb-6">
-        Arbitrum Portfolio
-      </h1>
+    <>
+      <Helmet>
+        <title>
+          {address
+            ? `Portfolio of ${address}`
+            : "Loading portfolio"}
+        </title>
+      </Helmet>
 
-      <p className="text-sm text-zinc-500 mb-6">
-        {address}
-      </p>
+      <main className="min-h-screen p-10">
+        <h1 className="text-2xl font-bold mb-6">
+          Arbitrum Portfolio
+        </h1>
 
-      <div className="mb-6 p-4 border rounded-xl">
-        <div className="text-sm text-zinc-500">
-          Total Portfolio Value
+        <p className="text-sm text-zinc-500 mb-6">
+          {address}
+        </p>
+
+        <div className="mb-6 p-4 border rounded-xl">
+          <div className="text-sm text-zinc-500">
+            Total Portfolio Value
+          </div>
+
+          <div className="text-2xl font-bold">
+            ${total.toFixed(2)}
+          </div>
         </div>
 
-        <div className="text-2xl font-bold">
-          ${total.toFixed(2)}
-        </div>
-      </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Token</TableHead>
-            <TableHead className="text-right">Price</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">USD Value</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {tokens.map((t, i) => (
-            <TableRow key={i}>
-
-              <TableCell className="flex flex-col">
-                <span className="font-bold">
-                  {t.symbol}
-                </span>
-                <span className="text-xs text-zinc-500">
-                  {t.name}
-                </span>
-              </TableCell>
-
-              <TableCell className="text-right">
-                ${(
-                  prices[`arbitrum:${t.contract}`] || 0
-                ).toFixed(2)}
-              </TableCell>
-
-              <TableCell className="font-mono text-right">
-                {Number(t.balance).toLocaleString(undefined, {
-                  maximumFractionDigits: 4
-                })}
-              </TableCell>
-
-              <TableCell className="text-right">
-                ${(
-                  t.balance *
-                  (prices[`arbitrum:${t.contract}`] || 0)
-                ).toFixed(2)}
-              </TableCell>
-
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Token</TableHead>
+              <TableHead className="text-right">Price</TableHead>
+              <TableHead className="text-right">Amount</TableHead>
+              <TableHead className="text-right">USD Value</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
 
-    </main>
+          <TableBody>
+            {tokens.map((t, i) => (
+              <TableRow key={i}>
+
+                <TableCell className="flex flex-col">
+                  <span className="font-bold">
+                    {t.symbol}
+                  </span>
+                  <span className="text-xs text-zinc-500">
+                    {t.name}
+                  </span>
+                </TableCell>
+
+                <TableCell className="text-right">
+                  ${(
+                    prices[`arbitrum:${t.contract}`] || 0
+                  ).toFixed(2)}
+                </TableCell>
+
+                <TableCell className="font-mono text-right">
+                  {Number(t.balance).toLocaleString(undefined, {
+                    maximumFractionDigits: 4
+                  })}
+                </TableCell>
+
+                <TableCell className="text-right">
+                  ${(
+                    t.balance *
+                    (prices[`arbitrum:${t.contract}`] || 0)
+                  ).toFixed(2)}
+                </TableCell>
+
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+
+      </main>
+    </>
   )
 }

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Search } from "lucide-react"
+import { Helmet } from "react-helmet-async"
 import {
   InputGroup,
   InputGroupAddon,
@@ -18,42 +19,48 @@ export default function FrontPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-42vh)] flex items-center justify-center">
+    <>
+      <Helmet>
+        <title>Jatare | Your DeFi portfolio tracker</title>
+      </Helmet>
 
-      <div className="flex flex-col gap-7">
+      <div className="min-h-[calc(100vh-42vh)] flex items-center justify-center">
 
-        <p className="text-sm font-light text-gray-700 text-center">
-          Enter your wallet address to analyse your portfolio.
-        </p>
+        <div className="flex flex-col gap-7">
 
-        <form onSubmit={handleAnalyse} className="flex flex-col gap-4 w-[480px]">
+          <p className="text-sm font-light text-gray-700 text-center">
+            Enter your wallet address to analyse your portfolio.
+          </p>
 
-          <InputGroup className="bg-white">
+          <form onSubmit={handleAnalyse} className="flex flex-col gap-4 w-[480px]">
 
-            <InputGroupInput
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="0xFca88d5d0C03Cfa090595Dc73E2dbEde32875Fe6"
-              className="h-12 text-base"
-            />
+            <InputGroup className="bg-white">
 
-            <InputGroupAddon>
-              <Search className="w-4 h-12" />
-            </InputGroupAddon>
+              <InputGroupInput
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="0xFca88d5d0C03Cfa090595Dc73E2dbEde32875Fe6"
+                className="h-12 text-base"
+              />
 
-            <InputGroupButton
-              type="submit"
-              className="h-10 px-5 font-medium text-primary hover:bg-primary hover:text-white hover:font-medium"
-            >
-              Analyse
-            </InputGroupButton>
+              <InputGroupAddon>
+                <Search className="w-4 h-12" />
+              </InputGroupAddon>
 
-          </InputGroup>
+              <InputGroupButton
+                type="submit"
+                className="h-10 px-5 font-medium text-primary hover:bg-primary hover:text-white hover:font-medium"
+              >
+                Analyse
+              </InputGroupButton>
 
-        </form>
+            </InputGroup>
+
+          </form>
+
+        </div>
 
       </div>
-
-    </div>
+    </>
   )
 }
