@@ -135,7 +135,7 @@ export default function PortfolioPage() {
 
           <TableBody>
             <TableRow>
-              <TableCell colSpan={4} className="bg-muted">
+              <TableCell colSpan={4} className="bg-zinc-100">
                 Assets <span className="font-medium">${`${formatBalance(assets.reduce((acc, t) => acc + t.value, 0))}`}</span>
               </TableCell>
             </TableRow>
@@ -143,7 +143,7 @@ export default function PortfolioPage() {
               makeCell(t, i)
             ))}
             <TableRow>
-              <TableCell colSpan={4} className="bg-muted">
+              <TableCell colSpan={4} className="bg-zinc-100">
                 Debt <span className="font-medium">${`${formatBalance(debts.reduce((acc, t) => acc + t.value, 0))}`}</span>
               </TableCell>
             </TableRow>
