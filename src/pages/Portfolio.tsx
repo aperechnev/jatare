@@ -45,16 +45,6 @@ export default function PortfolioPage() {
     load()
   }, [address])
 
-  useEffect(() => {
-    if (!wallet.length) return
-
-    async function load() {
-
-    }
-
-    load()
-  }, [wallet])
-
   return (
     <>
       <Helmet>
@@ -99,7 +89,7 @@ export default function PortfolioPage() {
               <TableRow key={i}>
 
                 <TableCell className="flex flex-col">
-                  <div className="flex flex-row gap-2 items-center">
+                  <div className="flex flex-row gap-3 items-center">
                     <img
                       src={t.icon}
                       alt={t.name}
