@@ -90,15 +90,15 @@ export default function PortfolioPage() {
 
     const assets = wallet.filter((t: { value: number }) => t.value > 0)
     const assetsTotal = assets.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
-    assets.forEach((t: { value: number, percentage?: number }) => {t.percentage = (t.value / assetsTotal) * 100})
+    assets.forEach((t: { value: number, percentage?: number }) => { t.percentage = (t.value / assetsTotal) * 100 })
     setAssets(assets)
     setAssetsTotal(assetsTotal)
 
     const debts = wallet
-    .filter((t: { value: number }) => t.value < 0)
-        .map((t: { value: number, price: number }) => ({ ...t, price: -t.price, value: -t.value }))
+      .filter((t: { value: number }) => t.value < 0)
+      .map((t: { value: number, price: number }) => ({ ...t, price: -t.price, value: -t.value }))
     const debtTotal = debts.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
-    debts.forEach((t: { value: number, percentage?: number }) => {t.percentage = (t.value / debtTotal) * 100})
+    debts.forEach((t: { value: number, percentage?: number }) => { t.percentage = (t.value / debtTotal) * 100 })
     setDebts(debts)
     setDebtTotal(debtTotal)
   }
@@ -121,13 +121,13 @@ export default function PortfolioPage() {
         <div className="flex flex-row">
 
           <div>
-        <h1 className="text-2xl font-bold mb-1">
-          Portfolio
-        </h1>
+            <h1 className="text-2xl font-bold mb-1">
+              Portfolio
+            </h1>
 
-        <p className="text-md text-zinc-500 mb-6">
-          {address} <CopyButton text={address} />
-        </p>
+            <p className="text-md text-zinc-500 mb-6">
+              {address} <CopyButton text={address} />
+            </p>
           </div>
 
           <div className="text-right ml-auto">
@@ -135,7 +135,7 @@ export default function PortfolioPage() {
               Total value
             </div>
             <div className="text-3xl font-bold">
-            ${total.toFixed(2)}
+              ${total.toFixed(2)}
             </div>
           </div>
 
@@ -148,7 +148,7 @@ export default function PortfolioPage() {
               <TableHead className="text-right">Price</TableHead>
               <TableHead className="text-right">Amount</TableHead>
               <TableHead className="text-right">USD Value</TableHead>
-              <TableHead className="text-right">%</TableHead>
+              <TableHead className="text-right">Percent</TableHead>
             </TableRow>
           </TableHeader>
 
