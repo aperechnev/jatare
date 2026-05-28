@@ -22,6 +22,11 @@ function formatBalance(balance: number) {
 }
 
 function makeCell(asset: Asset, index: number) {
+  const percentageColors = {
+    green: 'bg-green-200',
+    red: 'bg-red-200',
+  }
+
   return (
     <TableRow key={index}>
 
@@ -57,8 +62,13 @@ function makeCell(asset: Asset, index: number) {
         ${formatBalance(asset.value)}
       </TableCell>
 
-      <TableCell className="text-right">
-        {(asset.percentage ?? 0).toFixed(2)}%
+      <TableCell className="text-right pl-10">
+        {asset.percentage.toFixed(2)}%
+        <div className="bg-gray-100 rounded-full h-1 mt-1" style={{ width: '100%' }}>
+          <div
+            className={`${asset.isDebt ? percentageColors.red : percentageColors.green} rounded-full h-1 mt-1`}
+            style={{ width: `${asset.percentage}%` }} />
+        </div>
       </TableCell>
 
     </TableRow>
@@ -96,7 +106,7 @@ export default function PortfolioPage() {
 
     const debts = wallet
       .filter((t: { value: number }) => t.value < 0)
-      .map((t: { value: number, price: number }) => ({ ...t, price: -t.price, value: -t.value }))
+      .map((t: { value: number, price: number }) => ({ ...t, price: -t.price, value: -t.value, isDebt: true }))
     const debtTotal = debts.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
     debts.forEach((t: { value: number, percentage?: number }) => { t.percentage = (t.value / debtTotal) * 100 })
     setDebts(debts)

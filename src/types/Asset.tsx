@@ -7,4 +7,5 @@ export type Asset = {
   decimals: number
   value: number
   percentage: number
+  isDebt: boolean
 }
