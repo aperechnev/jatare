@@ -121,8 +121,8 @@ export default function PortfolioPage() {
       </Helmet>
 
       <main className="min-h-screen p-10">
-        <h1 className="text-2xl font-bold mb-6">
-          Arbitrum Portfolio
+        <h1 className="text-2xl font-bold mb-1">
+          Portfolio
         </h1>
 
         <p className="text-md text-zinc-500 mb-6">
