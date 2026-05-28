@@ -1,23 +1,11 @@
-const WORKER_URL = import.meta.env.VITE_WORKER_URL
-
 const API_URL = "https://api.jatare.xyz"
 
-export async function getTokens(address: string) {
+export async function getWallet(address: string) {
   const res = await fetch(
-    `${WORKER_URL}/tokens?address=${address}`
+    `${API_URL}/wallet/${address}`
   )
 
-  if (!res.ok) throw new Error("Failed to fetch tokens")
-
-  return res.json()
-}
-
-export async function getPrices(contracts: string[]) {
-  const res = await fetch(
-    `${API_URL}/prices/${contracts.join(",")}`
-  )
-
-  if (!res.ok) throw new Error("Failed to fetch prices")
+  if (!res.ok) throw new Error("Failed to fetch wallet")
 
   return res.json()
 }

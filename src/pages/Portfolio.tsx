@@ -9,101 +9,43 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { getTokens, getPrices } from "@/api/portfolioApi"
+import { getWallet } from "@/api/portfolioApi"
 
-export function groupTokens(address: string, transfers: any[]) {
-  const map = new Map()
 
-  const addr = address.toLowerCase()
-
-  for (const tx of transfers) {
-    const key = tx.contractAddress?.toLowerCase()
-
-    if (!map.has(key)) {
-      map.set(key, {
-        symbol: tx.tokenSymbol,
-        name: tx.tokenName,
-        contract: tx.contractAddress,
-        balance: 0,
-        decimals: Number(tx.tokenDecimal),
-      })
-    }
-
-    const token = map.get(key)
-
-    const value =
-      Number(tx.value) / Math.pow(10, token.decimals)
-
-    const from = (tx.from || "").toLowerCase()
-    const to = (tx.to || "").toLowerCase()
-
-    if (!from || !to) continue
-
-    // incoming
-    if (to === addr) {
-      token.balance += value
-    }
-
-    // outgoing
-    if (from === addr) {
-      token.balance -= value
-    }
-  }
-
-  return Array.from(map.values())
-    .filter(t => t.balance > 0)
-    .sort((a, b) => b.balance - a.balance)
+function formatBalance(balance: number) {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(balance);
 }
 
 export default function PortfolioPage() {
   const { address } = useParams()
-  const [tokens, setTokens] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
+  const [wallet, setWallet] = useState([])
 
-  const [prices, setPrices] = useState({})
   const [total, setTotal] = useState(0)
 
   useEffect(() => {
     if (!address) return
 
     async function load() {
-      setLoading(true)
-
-      const data = await getTokens(address)
-
-      const grouped = groupTokens(address, data)
-
-      setTokens(grouped)
-      setLoading(false)
+      const wallet = await getWallet(address)
+      wallet.sort((a, b) => (b.price * b.balance) - (a.price * a.balance))
+      setWallet(wallet)
     }
 
     load()
   }, [address])
 
   useEffect(() => {
-    if (!tokens.length) return
+    if (!wallet.length) return
 
-    async function loadPrices() {
-      const contracts = tokens.map(t => `arbitrum:${t.contract}`)
+    async function load() {
 
-      const data = await getPrices(contracts)
-
-      setPrices(data)
     }
 
-    loadPrices()
-  }, [tokens])
-
-  useEffect(() => {
-    let sum = 0
-
-    for (const t of tokens) {
-      const price = prices[`arbitrum:${t.contract}`] || 0
-      sum += t.balance * price
-    }
-
-    setTotal(sum)
-  }, [prices, tokens])
+    load()
+  }, [wallet])
 
   return (
     <>
@@ -145,35 +87,39 @@ export default function PortfolioPage() {
           </TableHeader>
 
           <TableBody>
-            {tokens.map((t, i) => (
+            {wallet.map((t, i) => (
               <TableRow key={i}>
 
                 <TableCell className="flex flex-col">
-                  <span className="font-bold">
-                    {t.symbol}
-                  </span>
-                  <span className="text-xs text-zinc-500">
-                    {t.name}
-                  </span>
+                  <div className="flex flex-row gap-2 items-center">
+                    <img
+                      src={t.icon}
+                      alt={t.name}
+                      className="w-6 h-6 rounded-full mb-1"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-bold">
+                        {t.asset}
+                      </span>
+                      <span className="text-xs text-zinc-500">
+                        {t.name}
+                      </span>
+                    </div>
+                  </div>
                 </TableCell>
 
                 <TableCell className="text-right">
-                  ${(
-                    prices[`arbitrum:${t.contract}`] || 0
-                  ).toFixed(2)}
+                  ${formatBalance(t.price)}
                 </TableCell>
 
                 <TableCell className="font-mono text-right">
                   {Number(t.balance).toLocaleString(undefined, {
-                    maximumFractionDigits: 4
+                    maximumFractionDigits: t.decimals
                   })}
                 </TableCell>
 
                 <TableCell className="text-right">
-                  ${(
-                    t.balance *
-                    (prices[`arbitrum:${t.contract}`] || 0)
-                  ).toFixed(2)}
+                  ${formatBalance(t.price * t.balance)}
                 </TableCell>
 
               </TableRow>
