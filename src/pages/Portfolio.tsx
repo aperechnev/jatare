@@ -21,7 +21,7 @@ function formatBalance(balance: number) {
   }).format(balance);
 }
 
-function makeCell(asset: Asset, index: number, total: number) {
+function makeCell(asset: Asset, index: number) {
   return (
     <TableRow key={index}>
 
@@ -159,7 +159,7 @@ export default function PortfolioPage() {
               </TableCell>
             </TableRow>
             {assets.map((t, i) => (
-              makeCell(t, i, assetsTotal)
+              makeCell(t, i)
             ))}
             <TableRow>
               <TableCell colSpan={5} className="bg-zinc-100">
@@ -167,7 +167,7 @@ export default function PortfolioPage() {
               </TableCell>
             </TableRow>
             {debts.map((t, i) => (
-              makeCell(t, i, debtTotal)
+              makeCell(t, i)
             ))}
           </TableBody>
         </Table>
