@@ -19,9 +19,50 @@ function formatBalance(balance: number) {
   }).format(balance);
 }
 
+function makeCell(asset, index) {
+  return (
+    <TableRow key={index}>
+
+      <TableCell className="flex flex-col">
+        <div className="flex flex-row gap-3 items-center">
+          <img
+            src={asset.icon}
+            alt={asset.name}
+            className="w-6 h-6 rounded-full mb-1"
+          />
+          <div className="flex flex-col">
+            <span className="font-bold">
+              {asset.asset}
+            </span>
+            <span className="text-xs text-zinc-500">
+              {asset.name}
+            </span>
+          </div>
+        </div>
+      </TableCell>
+
+      <TableCell className="text-right">
+        ${formatBalance(asset.price)}
+      </TableCell>
+
+      <TableCell className="font-mono text-right">
+        {Number(asset.balance).toLocaleString(undefined, {
+          maximumFractionDigits: asset.decimals
+        })}
+      </TableCell>
+
+      <TableCell className="text-right font-medium">
+        ${formatBalance(asset.value)}
+      </TableCell>
+
+    </TableRow>
+  )
+}
+
 export default function PortfolioPage() {
   const { address } = useParams()
-  const [wallet, setWallet] = useState([])
+  const [assets, setAssets] = useState([])
+  const [debts, setDebts] = useState([])
 
   const [total, setTotal] = useState(0)
 
@@ -36,8 +77,16 @@ export default function PortfolioPage() {
       })
 
       wallet.sort((a, b) => b.value - a.value)
-      
-      setWallet(wallet)
+
+      setAssets(
+        wallet
+          .filter((t: { value: number }) => t.value > 0)
+      )
+      setDebts(
+        wallet
+          .filter((t: { value: number }) => t.value < 0)
+          .map((t: { value: number }) => ({ ...t, price: -t.price, value: -t.value }))
+      )
 
       setTotal(wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
     }
@@ -85,42 +134,21 @@ export default function PortfolioPage() {
           </TableHeader>
 
           <TableBody>
-            {wallet.map((t, i) => (
-              <TableRow key={i}>
-
-                <TableCell className="flex flex-col">
-                  <div className="flex flex-row gap-3 items-center">
-                    <img
-                      src={t.icon}
-                      alt={t.name}
-                      className="w-6 h-6 rounded-full mb-1"
-                    />
-                    <div className="flex flex-col">
-                      <span className="font-bold">
-                        {t.asset}
-                      </span>
-                      <span className="text-xs text-zinc-500">
-                        {t.name}
-                      </span>
-                    </div>
-                  </div>
-                </TableCell>
-
-                <TableCell className="text-right">
-                  ${formatBalance(t.price)}
-                </TableCell>
-
-                <TableCell className="font-mono text-right">
-                  {Number(t.balance).toLocaleString(undefined, {
-                    maximumFractionDigits: t.decimals
-                  })}
-                </TableCell>
-
-                <TableCell className="text-right font-medium">
-                  ${formatBalance(t.value)}
-                </TableCell>
-
-              </TableRow>
+            <TableRow>
+              <TableCell colSpan={4} className="bg-muted">
+                Assets <span className="font-medium">${`${formatBalance(assets.reduce((acc, t) => acc + t.value, 0))}`}</span>
+              </TableCell>
+            </TableRow>
+            {assets.map((t, i) => (
+              makeCell(t, i)
+            ))}
+            <TableRow>
+              <TableCell colSpan={4} className="bg-muted">
+                Debt <span className="font-medium">${`${formatBalance(debts.reduce((acc, t) => acc + t.value, 0))}`}</span>
+              </TableCell>
+            </TableRow>
+            {debts.map((t, i) => (
+              makeCell(t, i)
             ))}
           </TableBody>
         </Table>
