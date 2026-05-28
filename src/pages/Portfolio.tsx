@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { CopyButton } from "@/components/CopyButton"
 import { getWallet } from "@/api/portfolioApi"
 
 type Asset = {
@@ -124,8 +125,8 @@ export default function PortfolioPage() {
           Arbitrum Portfolio
         </h1>
 
-        <p className="text-sm text-zinc-500 mb-6">
-          {address}
+        <p className="text-md text-zinc-500 mb-6">
+          {address} <CopyButton text={address} />
         </p>
 
         <div className="mb-6 p-4 border rounded-xl">
