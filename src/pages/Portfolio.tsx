@@ -116,8 +116,8 @@ export default function PortfolioPage() {
                   })}
                 </TableCell>
 
-                <TableCell className="text-right">
-                  ${formatBalance(t.price * t.balance)}
+                <TableCell className="text-right font-medium">
+                  ${formatBalance(t.value)}
                 </TableCell>
 
               </TableRow>
