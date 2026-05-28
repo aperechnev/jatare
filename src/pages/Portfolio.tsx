@@ -69,6 +69,8 @@ export default function PortfolioPage() {
   const [debts, setDebts] = useState([])
 
   const [total, setTotal] = useState(0)
+  const [assetsTotal, setAssetsTotal] = useState(0)
+  const [debtTotal, setDebtTotal] = useState(0)
 
   useEffect(() => {
     if (!address) return
@@ -84,15 +86,15 @@ export default function PortfolioPage() {
 
       wallet.sort((a, b) => b.value - a.value)
 
-      setAssets(
-        wallet
-          .filter((t: { value: number }) => t.value > 0)
-      )
-      setDebts(
-        wallet
-          .filter((t: { value: number }) => t.value < 0)
+      const assets = wallet.filter((t: { value: number }) => t.value > 0)
+      setAssets(assets)
+      setAssetsTotal(assets.reduce((acc, t) => acc + t.value, 0))
+
+      const debts = wallet
+      .filter((t: { value: number }) => t.value < 0)
           .map((t: { value: number }) => ({ ...t, price: -t.price, value: -t.value }))
-      )
+      setDebts(debts)
+      setDebtTotal(debts.reduce((acc, t) => acc + t.value, 0))
     }
 
     load()
@@ -141,19 +143,19 @@ export default function PortfolioPage() {
           <TableBody>
             <TableRow>
               <TableCell colSpan={5} className="bg-zinc-100">
-                Assets <span className="font-medium">${`${formatBalance(assets.reduce((acc, t) => acc + t.value, 0))}`}</span>
+                Assets <span className="font-medium">${`${formatBalance(assetsTotal)}`}</span>
               </TableCell>
             </TableRow>
             {assets.map((t, i) => (
-              makeCell(t, i, total)
+              makeCell(t, i, assetsTotal)
             ))}
             <TableRow>
               <TableCell colSpan={5} className="bg-zinc-100">
-                Debt <span className="font-medium">${`${formatBalance(debts.reduce((acc, t) => acc + t.value, 0))}`}</span>
+                Debt <span className="font-medium">${`${formatBalance(debtTotal)}`}</span>
               </TableCell>
             </TableRow>
             {debts.map((t, i) => (
-              makeCell(t, i, total)
+              makeCell(t, i, debtTotal)
             ))}
           </TableBody>
         </Table>
