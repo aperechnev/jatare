@@ -11,6 +11,15 @@ import {
 } from "@/components/ui/table"
 import { getWallet } from "@/api/portfolioApi"
 
+type Asset = {
+  icon: string
+  name: string
+  asset: string
+  price: number
+  balance: number
+  decimals: number
+  value: number
+}
 
 function formatBalance(balance: number) {
   return new Intl.NumberFormat('en-US', {
@@ -19,19 +28,7 @@ function formatBalance(balance: number) {
   }).format(balance);
 }
 
-function makeCell(
-  asset: {
-    icon: string,
-    name: string,
-    asset: string,
-    price: number,
-    balance: number,
-    decimals: number,
-    value: number
-  },
-  index: number,
-  total: number
-) {
+function makeCell(asset: Asset, index: number, total: number) {
   return (
     <TableRow key={index}>
 
@@ -77,9 +74,9 @@ function makeCell(
 
 export default function PortfolioPage() {
   const params = useParams<{ address: string }>()
+
   const [assets, setAssets] = useState([])
   const [debts, setDebts] = useState([])
-
   const [total, setTotal] = useState(0)
   const [assetsTotal, setAssetsTotal] = useState(0)
   const [debtTotal, setDebtTotal] = useState(0)
@@ -109,7 +106,7 @@ export default function PortfolioPage() {
   }
 
   useEffect(() => {
-  load()
+    load()
   }, [])
 
   return (
