@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import {
@@ -108,7 +108,9 @@ export default function PortfolioPage() {
     setDebtTotal(debts.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
   }
 
+  useEffect(() => {
   load()
+  }, [])
 
   return (
     <>
