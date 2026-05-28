@@ -30,8 +30,16 @@ export default function PortfolioPage() {
 
     async function load() {
       const wallet = await getWallet(address)
-      wallet.sort((a, b) => (b.price * b.balance) - (a.price * a.balance))
+
+      wallet.forEach((t: { price: number; balance: number; value?: number }) => {
+        t.value = t.price * t.balance
+      })
+
+      wallet.sort((a, b) => b.value - a.value)
+      
       setWallet(wallet)
+
+      setTotal(wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
     }
 
     load()
