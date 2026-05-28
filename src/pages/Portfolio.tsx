@@ -19,7 +19,7 @@ function formatBalance(balance: number) {
   }).format(balance);
 }
 
-function makeCell(asset, index) {
+function makeCell(asset, index, total) {
   return (
     <TableRow key={index}>
 
@@ -55,6 +55,10 @@ function makeCell(asset, index) {
         ${formatBalance(asset.value)}
       </TableCell>
 
+      <TableCell className="text-right">
+        {total > 0 ? `${((asset.value / total) * 100).toFixed(2)}%` : '-'}
+      </TableCell>
+
     </TableRow>
   )
 }
@@ -76,6 +80,8 @@ export default function PortfolioPage() {
         t.value = t.price * t.balance
       })
 
+      setTotal(wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
+
       wallet.sort((a, b) => b.value - a.value)
 
       setAssets(
@@ -87,8 +93,6 @@ export default function PortfolioPage() {
           .filter((t: { value: number }) => t.value < 0)
           .map((t: { value: number }) => ({ ...t, price: -t.price, value: -t.value }))
       )
-
-      setTotal(wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
     }
 
     load()
@@ -130,25 +134,26 @@ export default function PortfolioPage() {
               <TableHead className="text-right">Price</TableHead>
               <TableHead className="text-right">Amount</TableHead>
               <TableHead className="text-right">USD Value</TableHead>
+              <TableHead className="text-right">%</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             <TableRow>
-              <TableCell colSpan={4} className="bg-zinc-100">
+              <TableCell colSpan={5} className="bg-zinc-100">
                 Assets <span className="font-medium">${`${formatBalance(assets.reduce((acc, t) => acc + t.value, 0))}`}</span>
               </TableCell>
             </TableRow>
             {assets.map((t, i) => (
-              makeCell(t, i)
+              makeCell(t, i, total)
             ))}
             <TableRow>
-              <TableCell colSpan={4} className="bg-zinc-100">
+              <TableCell colSpan={5} className="bg-zinc-100">
                 Debt <span className="font-medium">${`${formatBalance(debts.reduce((acc, t) => acc + t.value, 0))}`}</span>
               </TableCell>
             </TableRow>
             {debts.map((t, i) => (
-              makeCell(t, i)
+              makeCell(t, i, total)
             ))}
           </TableBody>
         </Table>
