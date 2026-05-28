@@ -121,7 +121,7 @@ export default function PortfolioPage() {
         <div className="flex flex-row">
 
           <div>
-            <h1 className="text-2xl font-bold mb-1">
+            <h1 className="text-2xl font-bold mb-2">
               Portfolio
             </h1>
 
