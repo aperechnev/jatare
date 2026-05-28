@@ -11,16 +11,8 @@ import {
 } from "@/components/ui/table"
 import { CopyButton } from "@/components/CopyButton"
 import { getWallet } from "@/api/portfolioApi"
+import type { Asset } from "@/types/Asset"
 
-type Asset = {
-  icon: string
-  name: string
-  asset: string
-  price: number
-  balance: number
-  decimals: number
-  value: number
-}
 
 function formatBalance(balance: number) {
   return new Intl.NumberFormat('en-US', {
@@ -66,7 +58,7 @@ function makeCell(asset: Asset, index: number, total: number) {
       </TableCell>
 
       <TableCell className="text-right">
-        {total > 0 ? `${((asset.value / total) * 100).toFixed(2)}%` : '-'}
+        {(asset.percentage ?? 0).toFixed(2)}%
       </TableCell>
 
     </TableRow>
@@ -91,19 +83,24 @@ export default function PortfolioPage() {
       t.value = t.price * t.balance
     })
 
-    setTotal(wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
+    const total = wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
+    setTotal(total)
 
     wallet.sort((a: { value: number }, b: { value: number }) => b.value - a.value)
 
     const assets = wallet.filter((t: { value: number }) => t.value > 0)
+    const assetsTotal = assets.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
+    assets.forEach((t: { value: number, percentage?: number }) => {t.percentage = (t.value / assetsTotal) * 100})
     setAssets(assets)
-    setAssetsTotal(assets.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
+    setAssetsTotal(assetsTotal)
 
     const debts = wallet
     .filter((t: { value: number }) => t.value < 0)
         .map((t: { value: number, price: number }) => ({ ...t, price: -t.price, value: -t.value }))
+    const debtTotal = debts.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
+    debts.forEach((t: { value: number, percentage?: number }) => {t.percentage = (t.value / debtTotal) * 100})
     setDebts(debts)
-    setDebtTotal(debts.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
+    setDebtTotal(debtTotal)
   }
 
   useEffect(() => {
@@ -121,6 +118,9 @@ export default function PortfolioPage() {
       </Helmet>
 
       <main className="min-h-screen p-10">
+        <div className="flex flex-row">
+
+          <div>
         <h1 className="text-2xl font-bold mb-1">
           Portfolio
         </h1>
@@ -128,15 +128,17 @@ export default function PortfolioPage() {
         <p className="text-md text-zinc-500 mb-6">
           {address} <CopyButton text={address} />
         </p>
-
-        <div className="mb-6 p-4 border rounded-xl">
-          <div className="text-sm text-zinc-500">
-            Total Portfolio Value
           </div>
 
-          <div className="text-2xl font-bold">
+          <div className="text-right ml-auto">
+            <div className="text-sm text-zinc-500">
+              Total value
+            </div>
+            <div className="text-3xl font-bold">
             ${total.toFixed(2)}
+            </div>
           </div>
+
         </div>
 
         <Table>
