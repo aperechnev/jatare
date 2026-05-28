@@ -128,7 +128,7 @@ export default function PortfolioPage() {
       </Helmet>
 
       <main className="min-h-screen p-10">
-        <div className="flex flex-row">
+        <div className="flex flex-row mb-6">
 
           <div>
             <h1 className="text-2xl font-bold mb-2">
@@ -173,7 +173,7 @@ export default function PortfolioPage() {
             ))}
             <TableRow>
               <TableCell colSpan={5} className="bg-zinc-100">
-                Debt <span className="font-medium">${`${formatBalance(debtTotal)}`}</span>
+                Debt <span className="font-medium">${`${formatBalance(debtTotal)}`}</span>&nbsp;&nbsp;&nbsp;&nbsp;Ratio: <span className="font-medium">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</span>
               </TableCell>
             </TableRow>
             {debts.map((t, i) => (
