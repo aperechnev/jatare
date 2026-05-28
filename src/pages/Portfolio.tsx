@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import {
@@ -19,7 +19,19 @@ function formatBalance(balance: number) {
   }).format(balance);
 }
 
-function makeCell(asset, index, total) {
+function makeCell(
+  asset: {
+    icon: string,
+    name: string,
+    asset: string,
+    price: number,
+    balance: number,
+    decimals: number,
+    value: number
+  },
+  index: number,
+  total: number
+) {
   return (
     <TableRow key={index}>
 
@@ -64,7 +76,7 @@ function makeCell(asset, index, total) {
 }
 
 export default function PortfolioPage() {
-  const { address } = useParams()
+  const params = useParams<{ address: string }>()
   const [assets, setAssets] = useState([])
   const [debts, setDebts] = useState([])
 
@@ -72,33 +84,31 @@ export default function PortfolioPage() {
   const [assetsTotal, setAssetsTotal] = useState(0)
   const [debtTotal, setDebtTotal] = useState(0)
 
-  useEffect(() => {
-    if (!address) return
+  const address = params.address ?? ""
 
-    async function load() {
-      const wallet = await getWallet(address)
+  async function load() {
+    const wallet = await getWallet(address)
 
-      wallet.forEach((t: { price: number; balance: number; value?: number }) => {
-        t.value = t.price * t.balance
-      })
+    wallet.forEach((t: { price: number; balance: number; value?: number }) => {
+      t.value = t.price * t.balance
+    })
 
-      setTotal(wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
+    setTotal(wallet.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
 
-      wallet.sort((a, b) => b.value - a.value)
+    wallet.sort((a: { value: number }, b: { value: number }) => b.value - a.value)
 
-      const assets = wallet.filter((t: { value: number }) => t.value > 0)
-      setAssets(assets)
-      setAssetsTotal(assets.reduce((acc, t) => acc + t.value, 0))
+    const assets = wallet.filter((t: { value: number }) => t.value > 0)
+    setAssets(assets)
+    setAssetsTotal(assets.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
 
-      const debts = wallet
-      .filter((t: { value: number }) => t.value < 0)
-          .map((t: { value: number }) => ({ ...t, price: -t.price, value: -t.value }))
-      setDebts(debts)
-      setDebtTotal(debts.reduce((acc, t) => acc + t.value, 0))
-    }
+    const debts = wallet
+    .filter((t: { value: number }) => t.value < 0)
+        .map((t: { value: number, price: number }) => ({ ...t, price: -t.price, value: -t.value }))
+    setDebts(debts)
+    setDebtTotal(debts.reduce((acc: number, t: { value: number }) => acc + t.value, 0))
+  }
 
-    load()
-  }, [address])
+  load()
 
   return (
     <>
