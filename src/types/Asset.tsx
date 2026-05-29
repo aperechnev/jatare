@@ -8,4 +8,5 @@ export type Asset = {
   value: number
   percentage: number
   isDebt: boolean
+  tokens: Asset[]
 }
