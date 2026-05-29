@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Asset } from "@/types/Asset"
 
 const percentageColors = {
@@ -35,12 +36,12 @@ function groupTokens(tokens: Asset[]): Asset[] {
 
 function makeSubassetRow(token: Asset, index: number) {
   return (
-    <div className="flex flex-row py-3 items-center hover:bg-gray-100" key={index}>
+    <div className="included-token flex flex-row py-3 items-center hover:bg-gray-100" key={index}>
 
       <div className="flex-1 pl-3">
-          <span className="font-normal pl-9">
-            {token.name}
-          </span>
+        <span className="font-normal pl-9">
+          {token.name}
+        </span>
       </div>
 
       <div className="text-right flex-1">
@@ -70,10 +71,10 @@ function makeSubassetRow(token: Asset, index: number) {
   )
 }
 
-function makeAssetRow(asset: Asset, index: number) {
+function makeAssetRow(asset: Asset, index: number, openAssets: Record<string, boolean>, toggle: (asset: string) => void) {
   return (
-    <div>
-      <div className="flex flex-row py-3 items-center hover:bg-gray-100" key={index}>
+    <div id={`asset-${asset.asset}`} key={index} data-tokens-shown='false'>
+      <div className="flex flex-row py-3 items-center hover:bg-gray-100" onClick={() => toggle(asset.asset)}>
 
         <div className="flex flex-col flex-1 pl-3">
           <div className="flex flex-row gap-3 items-center">
@@ -93,8 +94,18 @@ function makeAssetRow(asset: Asset, index: number) {
           </div>
         </div>
 
-        <div className="text-right flex-1">
-          {asset.tokens.length > 1 ? `` : formatBalance(asset.price)}
+        <div className="text-right flex-1 flex justify-end items-center">
+          {asset.tokens.length > 1 ? (
+            <div className="flex items-center justify-end w-full">
+              {openAssets[asset.asset] ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </div>
+          ) : (
+            formatBalance(asset.price)
+          )}
         </div>
 
         <div className="font-mono text-right flex-1">
@@ -118,7 +129,10 @@ function makeAssetRow(asset: Asset, index: number) {
 
       </div>
 
-      {asset.tokens.length > 1 && asset.tokens.map((t, i) => makeSubassetRow(t, i))}
+      {/* { > 1 && asset.tokens.map((t, i) => makeSubassetRow(t, i))} */}
+      {asset.tokens.length > 1 && openAssets[asset.asset] &&
+        asset.tokens.map((t, i) => makeSubassetRow(t, i))
+      }
     </div>
   )
 }
@@ -128,6 +142,19 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
   const [debts, setDebts] = useState<Asset[]>([])
   const [assetsTotal, setAssetsTotal] = useState(0)
   const [debtTotal, setDebtTotal] = useState(0)
+
+  const [openAssets, setOpenAssets] = useState<Record<string, boolean>>({})
+
+  function toggle(asset: string) {
+    setOpenAssets(prev => ({
+      ...prev,
+      [asset]: !prev[asset]
+    }))
+  }
+
+  useEffect(() => {
+    setOpenAssets({})
+  }, [wallet])
 
   useEffect(() => {
     if (!wallet.length) return
@@ -180,12 +207,16 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
       <div className="bg-zinc-100 p-3">
         Assets <span className="text-sm font-medium">${`${formatBalance(assetsTotal)}`}</span>
       </div>
-      {assets.map((t, i) => (makeAssetRow(t, i)))}
+      {assets.map((t, i) =>
+        makeAssetRow(t, i, openAssets, toggle)
+      )}
 
       <div className="bg-zinc-100 p-3">
         Debt <span className="text-sm font-medium">${`${formatBalance(debtTotal)}`}</span>&nbsp;&nbsp;&nbsp;&nbsp;Ratio: <span className="text-sm font-medium">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</span>
       </div>
-      {debts.map((t, i) => (makeAssetRow(t, i)))}
+      {debts.map((t, i) =>
+        (makeAssetRow(t, i, openAssets, toggle))
+      )}
 
     </div>
   )
