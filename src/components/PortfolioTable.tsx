@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import type { Asset } from "@/types/Asset"
 
+const percentageColors = {
+  green: 'bg-green-200',
+  red: 'bg-red-200',
+}
+
 function formatBalance(balance: number) {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
@@ -28,56 +33,92 @@ function groupTokens(tokens: Asset[]): Asset[] {
   return groupedAssets
 }
 
-function makeAssetRow(asset: Asset, index: number) {
-  const percentageColors = {
-    green: 'bg-green-200',
-    red: 'bg-red-200',
-  }
-
+function makeSubassetRow(token: Asset, index: number) {
   return (
     <div className="flex flex-row py-3 items-center hover:bg-gray-100" key={index}>
 
-      <div className="flex flex-col flex-1 pl-3">
-        <div className="flex flex-row gap-3 items-center">
-          <img
-            src={asset.icon}
-            alt={asset.name}
-            className="w-6 h-6 rounded-full mb-1"
-          />
-          <div className="flex flex-col">
-            <span className="font-bold">
-              {asset.asset}
-            </span>
-            <span className="text-xs text-zinc-500">
-              {asset.tokens.length > 1 ? `${asset.tokens.length} positions` : asset.tokens[0].name}
-            </span>
-          </div>
-        </div>
+      <div className="flex-1 pl-3">
+          <span className="font-normal pl-9">
+            {token.name}
+          </span>
       </div>
 
       <div className="text-right flex-1">
-        ${formatBalance(asset.price)}
+        ${formatBalance(token.price)}
       </div>
 
       <div className="font-mono text-right flex-1">
-        {Number(asset.balance).toLocaleString(undefined, {
-          maximumFractionDigits: asset.decimals
+        {Number(token.balance).toLocaleString(undefined, {
+          maximumFractionDigits: token.decimals
         })}
       </div>
 
       <div className="text-right font-medium flex-1">
-        ${formatBalance(asset.value)}
+        ${formatBalance(token.value)}
       </div>
 
       <div className="text-right flex-1 pr-3">
-        {asset.percentage.toFixed(2)}%
+        {token.percentage.toFixed(2)}%
         <div className="bg-gray-100 rounded-full h-1 mt-1 ml-12">
           <div
-            className={`${asset.isDebt ? percentageColors.red : percentageColors.green} rounded-full h-1 mt-1`}
-            style={{ width: `${asset.percentage}%` }} />
+            className={`${token.isDebt ? percentageColors.red : percentageColors.green} rounded-full h-1 mt-1`}
+            style={{ width: `${token.percentage}%` }} />
         </div>
       </div>
 
+    </div>
+  )
+}
+
+function makeAssetRow(asset: Asset, index: number) {
+  return (
+    <div>
+      <div className="flex flex-row py-3 items-center hover:bg-gray-100" key={index}>
+
+        <div className="flex flex-col flex-1 pl-3">
+          <div className="flex flex-row gap-3 items-center">
+            <img
+              src={asset.icon}
+              alt={asset.name}
+              className="w-6 h-6 rounded-full mb-1"
+            />
+            <div className="flex flex-col">
+              <span className="font-bold">
+                {asset.asset}
+              </span>
+              <span className="text-xs text-zinc-500">
+                {asset.tokens.length > 1 ? `${asset.tokens.length} positions` : asset.tokens[0].name}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-right flex-1">
+          {asset.tokens.length > 1 ? `` : formatBalance(asset.price)}
+        </div>
+
+        <div className="font-mono text-right flex-1">
+          {Number(asset.balance).toLocaleString(undefined, {
+            maximumFractionDigits: asset.decimals
+          })}
+        </div>
+
+        <div className="text-right font-medium flex-1">
+          ${formatBalance(asset.value)}
+        </div>
+
+        <div className="text-right flex-1 pr-3">
+          {asset.percentage.toFixed(2)}%
+          <div className="bg-gray-100 rounded-full h-1 mt-1 ml-12">
+            <div
+              className={`${asset.isDebt ? percentageColors.red : percentageColors.green} rounded-full h-1 mt-1`}
+              style={{ width: `${asset.percentage}%` }} />
+          </div>
+        </div>
+
+      </div>
+
+      {asset.tokens.length > 1 && asset.tokens.map((t, i) => makeSubassetRow(t, i))}
     </div>
   )
 }
