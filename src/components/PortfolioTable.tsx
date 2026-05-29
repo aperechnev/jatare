@@ -19,7 +19,7 @@ function formatBalance(balance: number) {
 function groupTokens(tokens: Asset[]): Asset[] {
   const groupedAssets: Asset[] = []
 
-  tokens.forEach((t: { asset: string }) => {
+  tokens.forEach((t: Asset) => {
     const existing = groupedAssets.find((a: { asset: string }) => a.asset === t.asset)
     if (existing) {
       existing.value += t.value
@@ -91,8 +91,8 @@ function makeCell(asset: Asset, index: number) {
 }
 
 function PortfolioTable({ wallet }: { wallet: Asset[] }) {
-  const [assets, setAssets] = useState([])
-  const [debts, setDebts] = useState([])
+  const [assets, setAssets] = useState<Asset[]>([])
+  const [debts, setDebts] = useState<Asset[]>([])
   const [assetsTotal, setAssetsTotal] = useState(0)
   const [debtTotal, setDebtTotal] = useState(0)
 
