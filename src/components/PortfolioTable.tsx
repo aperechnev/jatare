@@ -104,7 +104,7 @@ function makeAssetRow(asset: Asset, index: number, openAssets: Record<string, bo
               )}
             </div>
           ) : (
-            formatBalance(asset.price)
+            "$" + formatBalance(asset.price)
           )}
         </div>
 
@@ -205,14 +205,23 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
       </div>
 
       <div className="bg-zinc-100 p-3">
-        Assets <span className="text-sm font-medium">${`${formatBalance(assetsTotal)}`}</span>
+        <p className="text-xs">
+          Assets <span className="text-sm font-medium">${`${formatBalance(assetsTotal)}`}</span>
+        </p>
       </div>
       {assets.map((t, i) =>
         makeAssetRow(t, i, openAssets, toggle)
       )}
 
-      <div className="bg-zinc-100 p-3">
-        Debt <span className="text-sm font-medium">${`${formatBalance(debtTotal)}`}</span>&nbsp;&nbsp;&nbsp;&nbsp;Ratio: <span className="text-sm font-medium">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</span>
+      <div className="bg-zinc-100 p-3 text-xs">
+        <div className="flex flex-row gap-8">
+          <p className="text-xs">
+            Debt <span className="text-sm font-medium">${`${formatBalance(debtTotal)}`}</span>
+          </p>
+          <p className="text-xs">
+            Ratio <span className="text-sm font-medium">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</span>
+          </p>
+        </div>
       </div>
       {debts.map((t, i) =>
         (makeAssetRow(t, i, openAssets, toggle))
