@@ -1,12 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import type { Asset } from "@/types/Asset"
 
 function formatBalance(balance: number) {
@@ -36,16 +28,16 @@ function groupTokens(tokens: Asset[]): Asset[] {
   return groupedAssets
 }
 
-function makeCell(asset: Asset, index: number) {
+function makeAssetRow(asset: Asset, index: number) {
   const percentageColors = {
     green: 'bg-green-200',
     red: 'bg-red-200',
   }
 
   return (
-    <TableRow key={index}>
+    <div className="flex flex-row py-3 items-center hover:bg-gray-100" key={index}>
 
-      <TableCell className="flex flex-col">
+      <div className="flex flex-col flex-1 pl-3">
         <div className="flex flex-row gap-3 items-center">
           <img
             src={asset.icon}
@@ -61,32 +53,32 @@ function makeCell(asset: Asset, index: number) {
             </span>
           </div>
         </div>
-      </TableCell>
+      </div>
 
-      <TableCell className="text-right">
+      <div className="text-right flex-1">
         ${formatBalance(asset.price)}
-      </TableCell>
+      </div>
 
-      <TableCell className="font-mono text-right">
+      <div className="font-mono text-right flex-1">
         {Number(asset.balance).toLocaleString(undefined, {
           maximumFractionDigits: asset.decimals
         })}
-      </TableCell>
+      </div>
 
-      <TableCell className="text-right font-medium">
+      <div className="text-right font-medium flex-1">
         ${formatBalance(asset.value)}
-      </TableCell>
+      </div>
 
-      <TableCell className="text-right pl-10">
+      <div className="text-right flex-1 pr-3">
         {asset.percentage.toFixed(2)}%
-        <div className="bg-gray-100 rounded-full h-1 mt-1" style={{ width: '100%' }}>
+        <div className="bg-gray-100 rounded-full h-1 mt-1 ml-12">
           <div
             className={`${asset.isDebt ? percentageColors.red : percentageColors.green} rounded-full h-1 mt-1`}
             style={{ width: `${asset.percentage}%` }} />
         </div>
-      </TableCell>
+      </div>
 
-    </TableRow>
+    </div>
   )
 }
 
@@ -134,36 +126,27 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
   }, [wallet])
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Token</TableHead>
-          <TableHead className="text-right">Price</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-          <TableHead className="text-right">USD Value</TableHead>
-          <TableHead className="text-right">Percent</TableHead>
-        </TableRow>
-      </TableHeader>
+    <div className="flex flex-col text-sm gap-2">
 
-      <TableBody>
-        <TableRow>
-          <TableCell colSpan={5} className="bg-zinc-100">
-            Assets <span className="font-medium">${`${formatBalance(assetsTotal)}`}</span>
-          </TableCell>
-        </TableRow>
-        {assets.map((t, i) => (
-          makeCell(t, i)
-        ))}
-        <TableRow>
-          <TableCell colSpan={5} className="bg-zinc-100">
-            Debt <span className="font-medium">${`${formatBalance(debtTotal)}`}</span>&nbsp;&nbsp;&nbsp;&nbsp;Ratio: <span className="font-medium">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</span>
-          </TableCell>
-        </TableRow>
-        {debts.map((t, i) => (
-          makeCell(t, i)
-        ))}
-      </TableBody>
-    </Table>
+      <div className="flex flex-row font-medium pt-4 pb-2">
+        <div className="flex-1 pl-3">Token</div>
+        <div className="flex-1 text-right">Price</div>
+        <div className="flex-1 text-right">Amount</div>
+        <div className="flex-1 text-right">USD Value</div>
+        <div className="flex-1 text-right pe-3">Percent</div>
+      </div>
+
+      <div className="bg-zinc-100 p-3">
+        Assets <span className="text-sm font-medium">${`${formatBalance(assetsTotal)}`}</span>
+      </div>
+      {assets.map((t, i) => (makeAssetRow(t, i)))}
+
+      <div className="bg-zinc-100 p-3">
+        Debt <span className="text-sm font-medium">${`${formatBalance(debtTotal)}`}</span>&nbsp;&nbsp;&nbsp;&nbsp;Ratio: <span className="text-sm font-medium">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</span>
+      </div>
+      {debts.map((t, i) => (makeAssetRow(t, i)))}
+
+    </div>
   )
 }
 
