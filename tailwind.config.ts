@@ -1,7 +1,7 @@
 theme: {
   extend: {
     fontFamily: {
-      merriweather: ["Merriweather", "serif"],
+      inter: ["Inter", "serif"],
     },
   },
 },

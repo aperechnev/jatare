@@ -52,7 +52,7 @@ export default function Header() {
       <div className="h-16 px-6 flex items-center justify-between">
 
         <Link to="/">
-          <h1 className="font-merriweather text-2xl font-bold tracking-tight text-primary">
+          <h1 className="logo nav-logo">
             Jatare
           </h1>
         </Link>

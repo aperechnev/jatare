@@ -8,7 +8,8 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@fontsource-variable/noto-sans": "^5.2.10",
+    "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "@tabler/icons-webfont": "^3.44.0",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-query": "^5.100.14",
     "class-variance-authority": "^0.7.1",
