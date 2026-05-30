@@ -116,7 +116,7 @@ export default function PortfolioPage() {
                 color: debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
               }}
               >${debtTotal.toFixed(2)}</div>
-            <div className="ms">Unknown protocol</div>
+            <div className="ms">Aave Protocol</div>
           </div>
           <div className="mc">
             <div className="ml">LTV ratio</div>

@@ -1,11 +1,6 @@
+import "./PortfolioTable.css"
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Asset } from "@/types/Asset"
-
-const percentageColors = {
-  green: 'var(--color-assets-green)',
-  red: 'var(--color-assets-red)',
-}
 
 function formatBalance(balance: number) {
   return new Intl.NumberFormat('en-US', {
@@ -34,128 +29,128 @@ function groupTokens(tokens: Asset[]): Asset[] {
   return groupedAssets
 }
 
-function makeSubassetRow(token: Asset, index: number) {
+function makeSubassetRow(token: Asset, index: number, cls: string) {
   return (
-    <div className="included-token flex flex-row py-3 items-center hover:bg-gray-100" key={index}>
-
-      <div className="flex-1 pl-3">
-        <span className="font-normal pl-9">
-          {token.name}
-        </span>
-      </div>
-
-      <div className="text-right flex-1">
+    <tr
+      className={`sub-row ${cls}`}
+      style={{ display: "none" }}
+    >
+      <td>
+        <div className="tc">
+          <div className="sub-label">{token.name}</div>
+        </div>
+      </td>
+      <td className="muted" style={{ fontSize: "12px" }}>
         ${formatBalance(token.price)}
-      </div>
-
-      <div className="font-mono text-right flex-1">
+      </td>
+      <td className="muted font-mono" style={{ fontSize: "12px" }}>
         {Number(token.balance).toLocaleString(undefined, {
           maximumFractionDigits: token.decimals
         })}
-      </div>
-
-      <div className="text-right font-medium flex-1">
-        ${formatBalance(token.value)}
-      </div>
-
-      <div className="text-right flex-1 pr-3">
-        {token.percentage.toFixed(2)}%
-        <div className="bg-gray-100 rounded-full h-1 mt-1 ml-12">
-          <div
-            className={`${token.isDebt ? percentageColors.red : percentageColors.green} rounded-full h-1 mt-1`}
-            style={{ width: `${token.percentage}%` }} />
+      </td>
+      <td style={{ fontSize: "12px" }}>${formatBalance(token.value)}</td>
+      <td>
+        <div className="bw">
+          <span className="muted" style={{ fontSize: "11px" }}>{token.percentage.toFixed(2)}%</span>
+          <div className="bt">
+            <div className="bf" style={{
+              width: `${token.percentage}%`,
+              background: token.isDebt ? 'var(--color-assets-red)' : 'var(--color-assets-green)',
+              opacity: .5
+            }}></div>
+          </div>
         </div>
-      </div>
-
-    </div>
+      </td>
+    </tr>
   )
 }
 
-function makeAssetRow(asset: Asset, index: number, openAssets: Record<string, boolean>, toggle: (asset: string) => void) {
+function AssetRow({ asset }: { asset: Asset }) {
+  const [subassetsOpened, setSubassetsOpened] = useState(false)
+
+  const hasSubassets = asset.tokens.length > 1
+  const subassetClass = `subasset-${asset.asset.toLowerCase()}`
+
+  const toggleRows = (cls: string) => {
+    document
+      .querySelectorAll(`.${cls}`)
+      .forEach((el) => {
+        const htmlEl = el as HTMLElement;
+
+        htmlEl.style.display =
+          htmlEl.style.display === 'none'
+            ? 'table-row'
+            : 'none';
+      });
+
+    setSubassetsOpened(!subassetsOpened)
+  };
+
   return (
-    <div id={`asset-${asset.asset}`} key={index} data-tokens-shown='false'>
-      <div className="flex flex-row py-3 items-center hover:bg-gray-100" onClick={() => toggle(asset.asset)}>
-
-        <div className="flex flex-col flex-1 pl-3">
-          <div className="flex flex-row gap-3 items-center">
-            <img
-              src={asset.icon}
-              alt={asset.name}
-              className="w-6 h-6 rounded-full mb-1"
-            />
-            <div className="flex flex-col">
-              <span className="font-bold">
-                {asset.asset}
-              </span>
-              <span className="text-xs text-zinc-500">
-                {asset.tokens.length > 1 ? `${asset.tokens.length} positions` : asset.tokens[0].name}
-              </span>
+    <>
+      <tr
+        style={(hasSubassets ? { cursor: "pointer" } : {})}
+        onClick={() => {
+          toggleRows(subassetClass)
+        }}
+      >
+        <td>
+          <div className="tc">
+            <div className="ti2">
+              <img
+                src={asset.icon}
+                alt={asset.name}
+                className="w-8 h-8"
+              />
             </div>
+            <div>
+              <div className="tn">{asset.asset}</div>
+              <div className="ts2">
+                {hasSubassets ? `${asset.tokens.length} positions` : asset.tokens[0].name}
+              </div>
+            </div>
+            {hasSubassets && (
+              <button className="expand-btn" id="ethBtn" aria-label="Expand {asset.asset} positions">
+                <i
+                  className={`ti ti-chevron-${subassetsOpened ? 'up' : 'down'}`}
+                  aria-hidden="true"></i>
+              </button>
+            )}
           </div>
-        </div>
-
-        <div className="text-right flex-1 flex justify-end items-center">
-          {asset.tokens.length > 1 ? (
-            <div className="flex items-center justify-end w-full">
-              {openAssets[asset.asset] ? (
-                <ChevronUp size={16} />
-              ) : (
-                <ChevronDown size={16} />
-              )}
-            </div>
-          ) : (
-            "$" + formatBalance(asset.price)
-          )}
-        </div>
-
-        <div className="font-mono text-right flex-1">
+        </td>
+        <td className="muted">{hasSubassets ? "—" : ("$" + formatBalance(asset.price))}</td>
+        <td className="muted font-mono">
           {Number(asset.balance).toLocaleString(undefined, {
             maximumFractionDigits: asset.decimals
           })}
-        </div>
-
-        <div className="text-right font-medium flex-1">
+        </td>
+        <td>
           ${formatBalance(asset.value)}
-        </div>
-
-        <div className="text-right flex-1 pr-3">
-          {asset.percentage.toFixed(2)}%
-          <div className="bg-gray-100 rounded-full h-1 mt-1 ml-12">
-            <div
-              className="rounded-full h-1 mt-1"
-              style={{
+        </td>
+        <td>
+          <div className="bw">
+            <span className="muted">{asset.percentage.toFixed(2)}%</span>
+            <div className="bt">
+              <div className="bf" style={{
                 width: `${asset.percentage}%`,
                 backgroundColor: asset.isDebt ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
-              }} />
+              }}></div>
+            </div>
           </div>
-        </div>
+        </td>
+      </tr >
 
-      </div>
-
-      {/* { > 1 && asset.tokens.map((t, i) => makeSubassetRow(t, i))} */}
-      {asset.tokens.length > 1 && openAssets[asset.asset] &&
-        asset.tokens.map((t, i) => makeSubassetRow(t, i))
+      {
+        asset.tokens.length > 1 &&
+        asset.tokens.map((t, i) => makeSubassetRow(t, i, subassetClass))
       }
-    </div>
+    </>
   )
 }
 
 function PortfolioTable({ wallet }: { wallet: Asset[] }) {
   const [assets, setAssets] = useState<Asset[]>([])
   const [debts, setDebts] = useState<Asset[]>([])
-
-  const [openAssets, setOpenAssets] = useState<Record<string, boolean>>({})
-
-  function toggle(asset: string) {
-    setOpenAssets(prev => ({
-      ...prev,
-      [asset]: !prev[asset]
-    }))
-  }
-
-  useEffect(() => {
-    setOpenAssets({})
-  }, [wallet])
 
   useEffect(() => {
     if (!wallet.length) return
@@ -193,30 +188,59 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
   }, [wallet])
 
   return (
-    <div className="flex flex-col text-sm gap-2">
+    <>
+      <div className="grid2">
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th style={{ width: "18%", textAlign: "left" }}>Token</th>
+                <th style={{ width: "20%" }}>Price</th>
+                <th style={{ width: "27%" }}>Amount</th>
+                <th style={{ width: "15%" }}>Value</th>
+                <th style={{ width: "20%" }}>Allocation</th>
+              </tr>
+            </thead>
+            <tbody id="assetBody">
+              {assets.map((t, i) => <AssetRow asset={t} />)}
+            </tbody>
+          </table>
 
-      <div className="flex flex-row font-medium pt-4 pb-2">
-        <div className="flex-1 pl-3">Token</div>
-        <div className="flex-1 text-right">Price</div>
-        <div className="flex-1 text-right">Amount</div>
-        <div className="flex-1 text-right">USD Value</div>
-        <div className="flex-1 text-right pe-3">Percent</div>
-      </div>
-
-      {assets.map((t, i) =>
-        makeAssetRow(t, i, openAssets, toggle)
-      )}
-
-      <div className="p-3 text-xs">
-        <div className="flex flex-row gap-8">
-          Debt
+          <div className="sec">
+            <span>Debt $99.99</span><span>·</span><span>LTV 15.70%</span>
+            <span className="dbadge">Healthy</span>
+          </div>
+          <table style={{ marginTop: "6px" }}>
+            <tbody>
+              {debts.map((t, i) => (<AssetRow asset={t} />))}
+            </tbody>
+          </table>
         </div>
-      </div>
-      {debts.map((t, i) =>
-        (makeAssetRow(t, i, openAssets, toggle))
-      )}
 
-    </div>
+        {/* <div>
+          <div className="alloc-title">Allocation</div>
+          <div style={{ position: "relative", height: "130px", marginBottom: "14px" }}>
+            <canvas
+              id="dc"
+              role="img"
+              aria-label="Portfolio allocation: ETH 40%, BTC 39%, USDC 10%, XAUT 10%"
+              width="180"
+              height="130"
+              style={{ display: "block", boxSizing: "border-box", height: "130px", width: "180px" }}>
+              ETH 40%, BTC 39%, USDC 10%, XAUT 10%
+            </canvas>
+          </div>
+          {assets.map((t, i) => {
+            return (
+              <div className="leg">
+                <div className="ld" style={{ background: "#534AB7" }}>
+                </div>{t.asset}<span className="lp">${t.percentage.toFixed(2)}%</span>
+              </div>
+            )
+          })}
+        </div> */}
+      </div >
+    </>
   )
 }
 
