@@ -1,3 +1,7 @@
+body {
+  background-color: var(--color-background-primary);
+}
+
 h1 {
   font-size: 44px;
   font-weight: 600;

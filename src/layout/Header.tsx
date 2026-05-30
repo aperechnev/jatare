@@ -47,7 +47,7 @@ export default function Header() {
   }, [isConnected, address, navigate, location.pathname])
 
   return (
-    <header className="bg-white">
+    <header>
 
       <div className="h-16 px-6 flex items-center justify-between">
 
@@ -66,7 +66,7 @@ export default function Header() {
                 <ChevronDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-white border">
+            <DropdownMenuContent className="border">
               <DropdownMenuItem onSelect={() => navigate(`/portfolio/${address}`)}>
                 Portfolio
               </DropdownMenuItem>
@@ -78,7 +78,7 @@ export default function Header() {
           </DropdownMenu>
         )}
         {!isConnected && (
-          <Button onClick={handleConnect} variant="outline" className="gap-2 bg-transparent border-none">
+          <Button onClick={handleConnect} variant="outline" className="gap-2 border-none">
             <Wallet className="w-4 h-4" />
             Connect Wallet
           </Button>
