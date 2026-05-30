@@ -3,8 +3,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Asset } from "@/types/Asset"
 
 const percentageColors = {
-  green: 'bg-green-200',
-  red: 'bg-red-200',
+  green: 'var(--color-assets-green)',
+  red: 'var(--color-assets-red)',
 }
 
 function formatBalance(balance: number) {
@@ -122,8 +122,11 @@ function makeAssetRow(asset: Asset, index: number, openAssets: Record<string, bo
           {asset.percentage.toFixed(2)}%
           <div className="bg-gray-100 rounded-full h-1 mt-1 ml-12">
             <div
-              className={`${asset.isDebt ? percentageColors.red : percentageColors.green} rounded-full h-1 mt-1`}
-              style={{ width: `${asset.percentage}%` }} />
+              className="rounded-full h-1 mt-1"
+              style={{
+                width: `${asset.percentage}%`,
+                backgroundColor: asset.isDebt ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
+              }} />
           </div>
         </div>
 

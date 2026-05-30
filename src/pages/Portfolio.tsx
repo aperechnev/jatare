@@ -13,6 +13,11 @@ export default function PortfolioPage() {
   const [assetsTotal, setAssetsTotal] = useState(0)
   const [assetsCount, setAssetsCount] = useState(0)
   const [debtTotal, setDebtTotal] = useState(0)
+  const [ltv, setLtv] = useState<{ value: number, hint: string, color: string }>({
+    value: 0,
+    hint: "",
+    color: "transparent"
+  })
 
   const [wallet, setWallet] = useState([])
   const address = params.address ?? ""
@@ -44,6 +49,34 @@ export default function PortfolioPage() {
 
     load()
   }, [])
+
+  useEffect(() => {
+    var value = ((debtTotal / assetsTotal) * 100)
+    var hint = ""
+    var color = ""
+
+    if (assetsTotal == 0 || debtTotal == 0) {
+      hint = "No borrowing"
+      color = ""
+      value = 0
+    } else if (value < 20) {
+      hint = "Strong equity cushion"
+      color = "var(--color-assets-green)"
+    } else if (value < 35) {
+      hint = "Balanced use of debt"
+      color = "var(--color-assets-blue)"
+    } else if (value < 60) {
+      hint = "Meaningful leverage exposure"
+      color = "var(--color-assets-yellow)"
+    } else {
+      hint = "Highly leveraged position"
+      color = "var(--color-assets-red)"
+    }
+
+    setLtv({
+      value: value, hint: hint, color: color
+    })
+  }, [assetsTotal, debtTotal])
 
   return (
     <>
@@ -78,13 +111,17 @@ export default function PortfolioPage() {
           </div>
           <div className="mc">
             <div className="ml">Debt</div>
-            <div className="mv bad">${debtTotal.toFixed(2)}</div>
+            <div className="mv"
+              style={{
+                color: debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
+              }}
+              >${debtTotal.toFixed(2)}</div>
             <div className="ms">Unknown protocol</div>
           </div>
           <div className="mc">
             <div className="ml">LTV ratio</div>
-            <div className="mv">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</div>
-            <div className="ms">Unknown risk</div>
+            <div className="mv">{ltv.value.toFixed(2)}%</div>
+            <div className="ms" style={{ color: ltv.color }}>{ltv.hint}</div>
           </div>
           <div className="mc">
             <div className="ml">24h change</div>

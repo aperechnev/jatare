@@ -89,5 +89,5 @@
 }
 
 .ok {
-  color: #1d9e75;
+  color: var(--color-assets-green);
 }
