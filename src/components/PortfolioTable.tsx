@@ -140,8 +140,6 @@ function makeAssetRow(asset: Asset, index: number, openAssets: Record<string, bo
 function PortfolioTable({ wallet }: { wallet: Asset[] }) {
   const [assets, setAssets] = useState<Asset[]>([])
   const [debts, setDebts] = useState<Asset[]>([])
-  const [assetsTotal, setAssetsTotal] = useState(0)
-  const [debtTotal, setDebtTotal] = useState(0)
 
   const [openAssets, setOpenAssets] = useState<Record<string, boolean>>({})
 
@@ -170,7 +168,6 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
     }))
 
     setAssets(groupTokens(assetsWithPercent))
-    setAssetsTotal(assetsTotal)
 
     const debtList = sorted
       .filter(t => t.value < 0)
@@ -189,7 +186,6 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
     }))
 
     setDebts(groupTokens(debtWithPercent))
-    setDebtTotal(debtTotal)
 
   }, [wallet])
 
@@ -204,23 +200,13 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
         <div className="flex-1 text-right pe-3">Percent</div>
       </div>
 
-      <div className="bg-zinc-100 p-3">
-        <p className="text-xs">
-          Assets <span className="text-sm font-medium">${`${formatBalance(assetsTotal)}`}</span>
-        </p>
-      </div>
       {assets.map((t, i) =>
         makeAssetRow(t, i, openAssets, toggle)
       )}
 
-      <div className="bg-zinc-100 p-3 text-xs">
+      <div className="p-3 text-xs">
         <div className="flex flex-row gap-8">
-          <p className="text-xs">
-            Debt <span className="text-sm font-medium">${`${formatBalance(debtTotal)}`}</span>
-          </p>
-          <p className="text-xs">
-            Ratio <span className="text-sm font-medium">{((debtTotal / assetsTotal) * 100).toFixed(2)}%</span>
-          </p>
+          Debt
         </div>
       </div>
       {debts.map((t, i) =>
