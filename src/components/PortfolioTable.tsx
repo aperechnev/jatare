@@ -225,6 +225,15 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
             <span className="dbadge">{debtInfo?.label ?? "Unknown"}</span>
           </div>
           <table style={{ marginTop: "6px" }}>
+            <thead>
+              <tr>
+                <th style={{ width: "18%", textAlign: "left" }}></th>
+                <th style={{ width: "20%" }}></th>
+                <th style={{ width: "27%" }}></th>
+                <th style={{ width: "15%" }}></th>
+                <th style={{ width: "20%" }}></th>
+              </tr>
+            </thead>
             <tbody>
               {debts.map((t, i) => (<AssetRow asset={t} />))}
             </tbody>
