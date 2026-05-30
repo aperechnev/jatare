@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet-async"
 import PortfolioTable from "@/components/PortfolioTable"
 import { getWallet } from "@/api/portfolioApi"
 import type { Asset } from '@/types/Asset'
+import { makeDebtInfo } from '@/types/DebtInfo'
 
 export default function PortfolioPage() {
   const params = useParams<{ address: string }>()
@@ -51,41 +52,19 @@ export default function PortfolioPage() {
   }, [])
 
   useEffect(() => {
-    var value = ((debtTotal / assetsTotal) * 100)
-    var hint = ""
-    var color = ""
-
-    if (assetsTotal == 0 || debtTotal == 0) {
-      hint = "No borrowing"
-      color = ""
-      value = 0
-    } else if (value < 20) {
-      hint = "Strong equity cushion"
-      color = "var(--color-assets-green)"
-    } else if (value < 35) {
-      hint = "Balanced use of debt"
-      color = "var(--color-assets-blue)"
-    } else if (value < 60) {
-      hint = "Meaningful leverage exposure"
-      color = "var(--color-assets-yellow)"
-    } else {
-      hint = "Highly leveraged position"
-      color = "var(--color-assets-red)"
-    }
+    const debtInfo = makeDebtInfo(assetsTotal, debtTotal)
 
     setLtv({
-      value: value, hint: hint, color: color
+      value: debtInfo.percent,
+      hint: debtInfo.shortDescription,
+      color: debtInfo.color
     })
   }, [assetsTotal, debtTotal])
 
   return (
     <>
       <Helmet>
-        <title>
-          {address
-            ? `Portfolio of ${address}`
-            : "Loading portfolio"}
-        </title>
+        <title>{address ? `Portfolio of ${address}` : "Loading portfolio"}</title>
       </Helmet>
 
       <main className="min-h-screen p-10">
@@ -115,7 +94,7 @@ export default function PortfolioPage() {
               style={{
                 color: debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
               }}
-              >${debtTotal.toFixed(2)}</div>
+            >${debtTotal.toFixed(2)}</div>
             <div className="ms">Aave Protocol</div>
           </div>
           <div className="mc">

@@ -1,6 +1,8 @@
 import "./PortfolioTable.css"
 import { useEffect, useState } from "react";
 import type { Asset } from "@/types/Asset"
+import type { DebtInfo } from "@/types/DebtInfo";
+import { makeDebtInfo } from "@/types/DebtInfo";
 
 function formatBalance(balance: number) {
   return new Intl.NumberFormat('en-US', {
@@ -151,6 +153,9 @@ function AssetRow({ asset }: { asset: Asset }) {
 function PortfolioTable({ wallet }: { wallet: Asset[] }) {
   const [assets, setAssets] = useState<Asset[]>([])
   const [debts, setDebts] = useState<Asset[]>([])
+  const [assetsTotal, setAssetsTotal] = useState<number>(0)
+  const [debtTotal, setDebtTotal] = useState<number>(0)
+  const [debtInfo, setDebtInfo] = useState<DebtInfo>()
 
   useEffect(() => {
     if (!wallet.length) return
@@ -158,7 +163,10 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
     const sorted = [...wallet].sort((a, b) => b.value - a.value)
 
     const assetsList = sorted.filter(t => t.value > 0)
-    const assetsTotal = assetsList.reduce((acc, t) => acc + t.value, 0)
+
+    setAssetsTotal(
+      assetsList.reduce((acc, t) => acc + t.value, 0)
+    )
 
     const assetsWithPercent = assetsList.map(t => ({
       ...t,
@@ -176,7 +184,9 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
         isDebt: true,
       }))
 
-    const debtTotal = debtList.reduce((acc, t) => acc + t.value, 0)
+    setDebtTotal(
+      debtList.reduce((acc, t) => acc + t.value, 0)
+    )
 
     const debtWithPercent = debtList.map(t => ({
       ...t,
@@ -184,6 +194,8 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
     }))
 
     setDebts(groupTokens(debtWithPercent))
+
+    setDebtInfo(makeDebtInfo(assetsTotal, debtTotal))
 
   }, [wallet])
 
@@ -207,8 +219,10 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
           </table>
 
           <div className="sec">
-            <span>Debt $99.99</span><span>·</span><span>LTV 15.70%</span>
-            <span className="dbadge">Healthy</span>
+            <span>Debt ${debtTotal.toFixed(2)}</span>
+            <span>·</span>
+            <span>LTV {debtInfo?.percent.toFixed(2) ?? 0}%</span>
+            <span className="dbadge">{debtInfo?.label ?? "Unknown"}</span>
           </div>
           <table style={{ marginTop: "6px" }}>
             <tbody>
