@@ -164,9 +164,8 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
 
     const assetsList = sorted.filter(t => t.value > 0)
 
-    setAssetsTotal(
-      assetsList.reduce((acc, t) => acc + t.value, 0)
-    )
+    const assetsTotal = assetsList.reduce((acc, t) => acc + t.value, 0)
+    setAssetsTotal(assetsTotal)
 
     const assetsWithPercent = assetsList.map(t => ({
       ...t,
@@ -184,9 +183,8 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
         isDebt: true,
       }))
 
-    setDebtTotal(
-      debtList.reduce((acc, t) => acc + t.value, 0)
-    )
+    const debtTotal = debtList.reduce((acc, t) => acc + t.value, 0)
+    setDebtTotal(debtTotal)
 
     const debtWithPercent = debtList.map(t => ({
       ...t,
@@ -194,10 +192,11 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
     }))
 
     setDebts(groupTokens(debtWithPercent))
-
-    setDebtInfo(makeDebtInfo(assetsTotal, debtTotal))
-
   }, [wallet])
+
+  useEffect(() => {
+    setDebtInfo(makeDebtInfo(assetsTotal, debtTotal))
+  }, [assetsTotal, debtTotal])
 
   return (
     <>
