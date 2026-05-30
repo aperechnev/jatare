@@ -1,0 +1,118 @@
+.wallet-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-text-sm-size);
+  color: var(--color-text-secondary);
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.wallet-menu {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  overflow: hidden;
+  max-width: 300px;
+  margin-left: auto;
+}
+
+.wallet-menu .divider {
+  height: 0.5px;
+  background: var(--color-border-tertiary);
+  margin: 4px 0;
+}
+.wallet-menu .header {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 14px 16px 10px;
+}
+
+.wallet-menu .info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px 14px;
+}
+
+.wallet-menu .address {
+  flex: 1;
+  font-size: 12px;
+  color: var(--color-text-primary);
+  font-family: 'SF Mono', monospace;
+  word-break: break-all;
+  padding: 10px 12px;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 8px;
+  line-height: 1.5;
+}
+
+.wallet-menu .copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.wallet-button i {
+  font-size: 14px;
+}
+
+.wallet-menu button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.wallet-menu button:hover {
+  background-color: var(--color-background-secondary);
+}
+
+.wallet-menu button.destructive {
+  color: rgb(226, 75, 74);
+}
+
+.wallet-menu button.destructive i {
+  color: #e24b4a;
+}
+
+.wallet-menu button i {
+  font-size: 16px;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+.wallet-menu button.destructive:hover {
+  background-color: rgba(226, 75, 74, 0.08);
+}
