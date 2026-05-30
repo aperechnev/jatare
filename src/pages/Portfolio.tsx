@@ -33,15 +33,15 @@ export default function PortfolioPage() {
       const total = tokens.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
       setTotal(total)
 
-      const assets = tokens.filter(t => t.value > 0)
+      const assets = tokens.filter((t: Asset) => t.value > 0)
       setAssetsTotal(
         assets.reduce((acc: number, t: Asset) => acc + t.value, 0)
       )
       setAssetsCount(
-        (new Set(assets.map(t => t.asset))).size
+        (new Set(assets.map((t: Asset) => t.asset))).size
       )
 
-      const debtTotal = -1 * tokens.filter(t => t.value < 0).reduce((acc, t) => acc + t.value, 0)
+      const debtTotal = -1 * tokens.filter((t: Asset) => t.value < 0).reduce((acc: number, t: Asset) => acc + t.value, 0)
       setDebtTotal(debtTotal)
 
       setWallet(tokens)
