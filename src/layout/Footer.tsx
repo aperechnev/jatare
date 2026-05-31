@@ -30,7 +30,7 @@ export default function Footer() {
                 <div className="ft-col">
                     <h4>Developers</h4>
                     <a>API docs</a>
-                    <a>GitHub</a>
+                    <a href="https://github.com/aperechnev/jatare" target="_blank">GitHub</a>
                     <a>Status page</a>
                     <a>Rate limits</a>
                 </div>
@@ -39,7 +39,7 @@ export default function Footer() {
                     <h4>Company</h4>
                     <a>About</a>
                     <a>Blog</a>
-                    <a>Twitter / X</a>
+                    <a href="https://t.me/jatare_xyz" target="_blank">Telegram</a>
                     <a>Privacy policy</a>
                     <a>Terms of service</a>
                 </div>
@@ -50,9 +50,13 @@ export default function Footer() {
                 <div className="ft-status"><div className="dot"></div>All systems operational</div>
                 <div className="ft-social">
                     <a aria-label="Twitter"><i className="ti ti-brand-x" aria-hidden="true"></i></a>
-                    <a aria-label="GitHub"><i className="ti ti-brand-github" aria-hidden="true"></i></a>
+                    <a href="https://github.com/aperechnev/jatare" target="_blank" aria-label="GitHub">
+                        <i className="ti ti-brand-github" aria-hidden="true"></i>
+                    </a>
                     <a aria-label="Discord"><i className="ti ti-brand-discord" aria-hidden="true"></i></a>
-                    <a aria-label="Telegram"><i className="ti ti-brand-telegram" aria-hidden="true"></i></a>
+                    <a href="https://t.me/jatare_xyz" target="_blank" aria-label="Telegram">
+                        <i className="ti ti-brand-telegram" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
         </div>
