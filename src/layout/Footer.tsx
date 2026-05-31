@@ -36,10 +36,9 @@ export default function Footer() {
                 </div>
 
                 <div className="ft-col">
-                    <h4>Company</h4>
-                    <a>About</a>
-                    <a>Blog</a>
+                    <h4>Team</h4>
                     <a href="https://t.me/jatare_xyz" target="_blank">Telegram</a>
+                    <a href="https://discord.gg/4c4MkBkmAQ" target="_blank">Discord</a>
                     <a>Privacy policy</a>
                     <a>Terms of service</a>
                 </div>
@@ -47,13 +46,17 @@ export default function Footer() {
 
             <div className="ft-bottom">
                 <div className="ft-copy">© 2026 Jatare. All rights reserved.</div>
-                <div className="ft-status"><div className="dot"></div>All systems operational</div>
+                <div className="ft-status">
+                    <div className="dot"></div>All systems operational
+                </div>
                 <div className="ft-social">
                     <a aria-label="Twitter"><i className="ti ti-brand-x" aria-hidden="true"></i></a>
                     <a href="https://github.com/aperechnev/jatare" target="_blank" aria-label="GitHub">
                         <i className="ti ti-brand-github" aria-hidden="true"></i>
                     </a>
-                    <a aria-label="Discord"><i className="ti ti-brand-discord" aria-hidden="true"></i></a>
+                    <a href="https://discord.gg/4c4MkBkmAQ" target="_blank" aria-label="Discord">
+                        <i className="ti ti-brand-discord" aria-hidden="true"></i>
+                    </a>
                     <a href="https://t.me/jatare_xyz" target="_blank" aria-label="Telegram">
                         <i className="ti ti-brand-telegram" aria-hidden="true"></i>
                     </a>
