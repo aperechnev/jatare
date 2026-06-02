@@ -71,7 +71,7 @@ function AssetRow({ asset }: { asset: Asset }) {
   const [subassetsOpened, setSubassetsOpened] = useState(false)
 
   const hasSubassets = asset.tokens.length > 1
-  const subassetClass = `subasset-${asset.asset.toLowerCase()}`
+  const subassetClass = `subasset-${asset.asset.toLowerCase().replaceAll(" ", "_")}`
 
   const toggleRows = (cls: string) => {
     document
