@@ -3,13 +3,8 @@ import { useEffect, useState } from "react";
 import type { Asset } from "@/types/Asset"
 import type { DebtInfo } from "@/types/DebtInfo";
 import { makeDebtInfo } from "@/types/DebtInfo";
+import { formatBalance } from "@/utils/formatting";
 
-function formatBalance(balance: number) {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(balance);
-}
 
 function groupTokens(tokens: Asset[]): Asset[] {
   const groupedAssets: Asset[] = []

@@ -6,6 +6,7 @@ import PortfolioTable from "@/components/PortfolioTable"
 import { getWallet } from "@/api/portfolioApi"
 import type { Asset } from '@/types/Asset'
 import { makeDebtInfo } from '@/types/DebtInfo'
+import { formatBalance } from '@/utils/formatting'
 
 export default function PortfolioPage() {
   const params = useParams<{ address: string }>()
@@ -72,9 +73,9 @@ export default function PortfolioPage() {
         <div className="phead">
           <div>
             <div className="plabel">Portfolio</div>
-            <div className="pvalue">${total.toFixed(2)}</div>
+            <div className="pvalue">${formatBalance(total)}</div>
             <div className="pbreakdown">
-              <span>${assetsTotal.toFixed(2)}</span> assets &nbsp;·&nbsp; <span className="bad">−${debtTotal.toFixed(2)}</span> debt
+              <span>${formatBalance(assetsTotal)}</span> assets &nbsp;·&nbsp; <span className="bad">−${formatBalance(debtTotal)}</span> debt
             </div>
           </div>
           <button className="rebal-btn">
@@ -85,7 +86,7 @@ export default function PortfolioPage() {
         <div className="metrics">
           <div className="mc">
             <div className="ml">Assets</div>
-            <div className="mv">${assetsTotal.toFixed(2)}</div>
+            <div className="mv">${formatBalance(assetsTotal)}</div>
             <div className="ms">{(assetsCount == 1 ? `1 position` : `${assetsCount} positions`)}</div>
           </div>
           <div className="mc">
@@ -94,7 +95,7 @@ export default function PortfolioPage() {
               style={{
                 color: debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
               }}
-            >${debtTotal.toFixed(2)}</div>
+            >${formatBalance(debtTotal)}</div>
             <div className="ms">Aave Protocol</div>
           </div>
           <div className="mc">
