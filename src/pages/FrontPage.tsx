@@ -22,7 +22,7 @@ export default function FrontPage() {
       <div className="min-h-[calc(100vh-42vh)] flex flex-col items-center justify-center">
 
         <div className="hero">
-          <div className="hero-tag"><span></span> Live on-chain data · 12 networks</div>
+          <div className="hero-tag"><span></span> Live on-chain data · 4 networks</div>
           <h1>Your <em>DeFi portfolio</em>,<br />clearly understood</h1>
           <p className="subtitle">Track assets, debt, and allocation across every wallet. Set rebalancing targets and know exactly what to buy or sell.</p>
 

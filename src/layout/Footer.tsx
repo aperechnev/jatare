@@ -12,9 +12,9 @@ export default function Footer() {
                         <span className="net">Arbitrum</span>
                         <span className="net">Optimism</span>
                         <span className="net">Base</span>
-                        <span className="net">Polygon</span>
+                        {/* <span className="net">Polygon</span>
                         <span className="net">Avalanche</span>
-                        <span className="net">+6 more</span>
+                        <span className="net">+6 more</span> */}
                     </div>
                 </div>
 
