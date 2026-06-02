@@ -39,7 +39,7 @@ function makeSubassetRow(token: Asset, index: number, cls: string) {
     >
       <td>
         <div className="tc">
-          <div className="sub-label">{token.name}</div>
+          <div className="sub-label">{token.symbol}</div>
         </div>
       </td>
       <td className="muted" style={{ fontSize: "12px" }}>
@@ -108,7 +108,7 @@ function AssetRow({ asset }: { asset: Asset }) {
             <div>
               <div className="tn">{asset.asset}</div>
               <div className="ts2">
-                {hasSubassets ? `${asset.tokens.length} positions` : asset.tokens[0].name}
+                {hasSubassets ? `${asset.tokens.length} positions` : asset.tokens[0].symbol}
               </div>
             </div>
             {hasSubassets && (

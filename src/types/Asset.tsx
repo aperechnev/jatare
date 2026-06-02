@@ -1,6 +1,7 @@
 export type Asset = {
   icon: string
   name: string
+  symbol: string
   asset: string
   price: number
   balance: number
