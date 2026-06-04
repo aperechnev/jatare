@@ -151,13 +151,13 @@ tbody td {
 .bw {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.8vw;
   justify-content: flex-end;
 }
 
 .bt {
   width: 7vw;
-  height: 3px;
+  height: 6px;
   background: var(--color-border-tertiary);
   border-radius: 2px;
   overflow: hidden;
