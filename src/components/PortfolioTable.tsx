@@ -52,7 +52,7 @@ function makeSubassetRow(token: Asset, index: number, cls: string) {
       </td>
       <td className="muted font-mono">
         {Number(token.balance).toLocaleString(undefined, {
-          maximumFractionDigits: token.decimals
+          maximumFractionDigits: Math.min(token.decimals, 7)
         })}
       </td>
       <td>${formatBalance(token.value)}</td>
@@ -129,7 +129,7 @@ function AssetRow({ asset }: { asset: Asset }) {
         <td className="muted">{hasSubassets ? "—" : ("$" + formatBalance(asset.price))}</td>
         <td className="muted font-mono">
           {Number(asset.balance).toLocaleString(undefined, {
-            maximumFractionDigits: asset.decimals
+            maximumFractionDigits: Math.min(asset.decimals, 7)
           })}
         </td>
         <td>
@@ -211,11 +211,11 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
           <table>
             <thead>
               <tr>
-                <th style={{ width: "22%", textAlign: "left" }}>Token</th>
+                <th style={{ width: "25%", textAlign: "left" }}>Token</th>
                 <th style={{ width: "17%" }}>Price</th>
-                <th style={{ width: "26%" }}>Amount</th>
-                <th style={{ width: "15%" }}>Value</th>
-                <th style={{ width: "20%" }}>Allocation</th>
+                <th style={{ width: "17%" }}>Amount</th>
+                <th style={{ width: "17%" }}>Value</th>
+                <th style={{ width: "24%" }}>Allocation</th>
               </tr>
             </thead>
             <tbody id="assetBody">
@@ -232,11 +232,11 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
           <table style={{ marginTop: "6px" }}>
             <thead>
               <tr>
-                <th style={{ width: "22%", textAlign: "left" }}></th>
+                <th style={{ width: "25%", textAlign: "left" }}></th>
                 <th style={{ width: "17%" }}></th>
-                <th style={{ width: "26%" }}></th>
-                <th style={{ width: "15%" }}></th>
-                <th style={{ width: "20%" }}></th>
+                <th style={{ width: "17%" }}></th>
+                <th style={{ width: "17%" }}></th>
+                <th style={{ width: "24%" }}></th>
               </tr>
             </thead>
             <tbody>
