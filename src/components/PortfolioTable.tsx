@@ -6,6 +6,11 @@ import { makeDebtInfo } from "@/types/DebtInfo";
 import { formatBalance, capitalize } from "@/utils/formatting";
 
 
+type AssetList = {
+  items: Asset[]
+  total: number
+}
+
 function groupTokens(tokens: Asset[]): Asset[] {
   const groupedAssets: Asset[] = []
 
@@ -157,10 +162,9 @@ function AssetRow({ asset }: { asset: Asset }) {
 }
 
 function PortfolioTable({ wallet }: { wallet: Asset[] }) {
-  const [assets, setAssets] = useState<Asset[]>([])
-  const [debts, setDebts] = useState<Asset[]>([])
-  const [assetsTotal, setAssetsTotal] = useState<number>(0)
-  const [debtTotal, setDebtTotal] = useState<number>(0)
+  const [assets, setAssets] = useState<AssetList>({ items: [], total: 0})
+  const [debts, setDebts] = useState<AssetList>({ items: [], total: 0})
+
   const [debtInfo, setDebtInfo] = useState<DebtInfo>()
 
   useEffect(() => {
@@ -168,17 +172,23 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
 
     const sorted = [...wallet].sort((a, b) => b.value - a.value)
 
+    // Set assets
+
     const assetsList = sorted.filter(t => t.value > 0)
 
     const assetsTotal = assetsList.reduce((acc, t) => acc + t.value, 0)
-    setAssetsTotal(assetsTotal)
 
     const assetsWithPercent = assetsList.map(t => ({
       ...t,
       percentage: (t.value / assetsTotal) * 100
     }))
 
-    setAssets(groupTokens(assetsWithPercent))
+    setAssets({
+      items: groupTokens(assetsWithPercent),
+      total: assetsTotal
+    })
+
+    // Set debts
 
     const debtList = sorted
       .filter(t => t.value < 0)
@@ -190,19 +200,21 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
       }))
 
     const debtTotal = debtList.reduce((acc, t) => acc + t.value, 0)
-    setDebtTotal(debtTotal)
 
     const debtWithPercent = debtList.map(t => ({
       ...t,
       percentage: (t.value / debtTotal) * 100
     }))
 
-    setDebts(groupTokens(debtWithPercent))
+    setDebts({
+      items: groupTokens(debtWithPercent),
+      total: debtTotal
+    })
   }, [wallet])
 
   useEffect(() => {
-    setDebtInfo(makeDebtInfo(assetsTotal, debtTotal))
-  }, [assetsTotal, debtTotal])
+    setDebtInfo(makeDebtInfo(assets.total, debts.total))
+  }, [assets, debts])
 
   return (
     <>
@@ -219,12 +231,12 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
               </tr>
             </thead>
             <tbody id="assetBody">
-              {assets.map((t, i) => <AssetRow asset={t} />)}
+              {assets.items.map((t, i) => <AssetRow asset={t} />)}
             </tbody>
           </table>
 
           <div className="sec">
-            <span>Debt ${debtTotal.toFixed(2)}</span>
+            <span>Debt ${debts.total.toFixed(2)}</span>
             <span>·</span>
             <span>LTV {debtInfo?.percent.toFixed(2) ?? 0}%</span>
             <span className="dbadge">{debtInfo?.label ?? "Unknown"}</span>
@@ -240,7 +252,7 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
               </tr>
             </thead>
             <tbody>
-              {debts.map((t, i) => (<AssetRow asset={t} />))}
+              {debts.items.map((t, i) => (<AssetRow asset={t} />))}
             </tbody>
           </table>
         </div>
