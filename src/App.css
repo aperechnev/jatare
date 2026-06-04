@@ -2,6 +2,12 @@ body {
   background-color: var(--color-background-primary);
 }
 
+main {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 h1 {
   font-size: 44px;
   font-weight: 600;
