@@ -114,7 +114,7 @@ function AssetRow({ asset }: { asset: Asset }) {
             <div>
               <div className="tn">{asset.asset}</div>
               <div className="ts2">
-                {hasSubassets ? `${asset.tokens.length} positions` : `${asset.tokens[0].symbol} · ${capitalize(asset.chain)}`}
+                {hasSubassets ? `${asset.tokens.length} tokens` : `${asset.tokens[0].symbol} · ${capitalize(asset.chain)}`}
               </div>
             </div>
             {hasSubassets && (
