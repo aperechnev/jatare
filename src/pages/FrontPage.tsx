@@ -77,7 +77,7 @@ export default function FrontPage() {
             <div className="stat-lbl">Wallets analysed</div>
           </div>
           <div className="stat">
-            <div className="stat-val">12</div>
+            <div className="stat-val">4</div>
             <div className="stat-lbl">Networks supported</div>
           </div>
         </div>
