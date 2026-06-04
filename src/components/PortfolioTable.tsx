@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Asset } from "@/types/Asset"
 import type { DebtInfo } from "@/types/DebtInfo";
 import { makeDebtInfo } from "@/types/DebtInfo";
-import { formatBalance } from "@/utils/formatting";
+import { formatBalance, capitalize } from "@/utils/formatting";
 
 
 function groupTokens(tokens: Asset[]): Asset[] {
@@ -34,21 +34,31 @@ function makeSubassetRow(token: Asset, index: number, cls: string) {
     >
       <td>
         <div className="tc">
-          <div className="sub-label">{token.symbol}</div>
+          <div className="token-wrap">
+            <img src={token.icon} alt={`${token.name} token icon`} className="sub-tok-icon w-8 h-8" />
+            <img src={`https://cdn.jatare.xyz/chains/${token.chain}.svg`} alt={`${token.chain} chain icon`} className="sub-chain-icon" />
+          </div>
+          <div>
+            <div className="tn">{token.name}</div>
+            <div className="ts2">
+              {token.symbol} · {capitalize(token.chain)}
+              {/* <button className="copy-btn" title="Copy contract address"><i class="ti ti-copy"></i></button> */}
+            </div>
+          </div>
         </div>
       </td>
-      <td className="muted" style={{ fontSize: "12px" }}>
+      <td className="muted">
         ${formatBalance(token.price)}
       </td>
-      <td className="muted font-mono" style={{ fontSize: "12px" }}>
+      <td className="muted font-mono">
         {Number(token.balance).toLocaleString(undefined, {
           maximumFractionDigits: token.decimals
         })}
       </td>
-      <td style={{ fontSize: "12px" }}>${formatBalance(token.value)}</td>
+      <td>${formatBalance(token.value)}</td>
       <td>
         <div className="bw">
-          <span className="muted" style={{ fontSize: "11px" }}>{token.percentage.toFixed(2)}%</span>
+          <span className="muted">{token.percentage.toFixed(2)}%</span>
           <div className="bt">
             <div className="bf" style={{
               width: `${token.percentage}%`,
@@ -93,17 +103,18 @@ function AssetRow({ asset }: { asset: Asset }) {
       >
         <td>
           <div className="tc">
-            <div className="ti2">
+            <div className="token-wrap">
               <img
                 src={asset.icon}
-                alt={asset.name}
-                className="w-8 h-8"
+                alt={`${asset.name} token icon`}
+                className="tok-icon w-8 h-8"
               />
+              {hasSubassets ? '' : <img src={`https://cdn.jatare.xyz/chains/${asset.chain}.svg`} alt={`${asset.chain} chain icon`} className="chain-icon" />}
             </div>
             <div>
               <div className="tn">{asset.asset}</div>
               <div className="ts2">
-                {hasSubassets ? `${asset.tokens.length} positions` : asset.tokens[0].symbol}
+                {hasSubassets ? `${asset.tokens.length} positions` : `${asset.tokens[0].symbol} · ${capitalize(asset.chain)}`}
               </div>
             </div>
             {hasSubassets && (
@@ -200,9 +211,9 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
           <table>
             <thead>
               <tr>
-                <th style={{ width: "18%", textAlign: "left" }}>Token</th>
-                <th style={{ width: "20%" }}>Price</th>
-                <th style={{ width: "27%" }}>Amount</th>
+                <th style={{ width: "22%", textAlign: "left" }}>Token</th>
+                <th style={{ width: "17%" }}>Price</th>
+                <th style={{ width: "26%" }}>Amount</th>
                 <th style={{ width: "15%" }}>Value</th>
                 <th style={{ width: "20%" }}>Allocation</th>
               </tr>
@@ -221,9 +232,9 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
           <table style={{ marginTop: "6px" }}>
             <thead>
               <tr>
-                <th style={{ width: "18%", textAlign: "left" }}></th>
-                <th style={{ width: "20%" }}></th>
-                <th style={{ width: "27%" }}></th>
+                <th style={{ width: "22%", textAlign: "left" }}></th>
+                <th style={{ width: "17%" }}></th>
+                <th style={{ width: "26%" }}></th>
                 <th style={{ width: "15%" }}></th>
                 <th style={{ width: "20%" }}></th>
               </tr>

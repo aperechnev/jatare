@@ -41,22 +41,68 @@ tbody td:first-child {
 .tc {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.8vw;
 }
 
-.ti2 {
-  width: 36px;
-  height: 36px;
+.token-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.tok-icon {
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  margin-right: 0.25vw;
+}
+
+.chain-icon {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--color-background-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-tok-icon {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-chain-icon {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--color-background-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 }
 
 .tn {
   font-size: var(--font-text-md-size);
   font-weight: 500;
+}
+
+.ts {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .ts2 {
@@ -88,7 +134,7 @@ tbody td:first-child {
   border-radius: var(--border-radius-md);
   cursor: pointer;
   transition: background 0.15s, transform 0.1s;
-  margin-left: 2vw;
+  margin-left: 1vw;
 }
 
 tbody td {
@@ -135,7 +181,7 @@ tbody td {
 }
 
 .sub-row td:first-child {
-  padding-left: 2.5vw;
+  padding-left: 2vw;
 }
 
 .sec {

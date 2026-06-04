@@ -1,4 +1,5 @@
 export type Asset = {
+  chain: string
   icon: string
   name: string
   symbol: string
