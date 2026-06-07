@@ -97,10 +97,12 @@ export default function Header() {
             </div>
           )}
 
-          <div ref={menuRef} className={`
-              wallet-menu absolute top-full right-0 w-120 transition-all duration-200 overflow-hidden
-              ${isOpen ? "opacity-100" : "opacity-0"}
-            `}>
+          <div
+            ref={menuRef}
+            className="wallet-menu absolute top-full right-0 w-120 transition-all duration-200 overflow-hidden opacity-100"
+            style={{
+              display: isOpen ? "" : "none"
+            }}>
 
             <div className="header">
               Connected Wallet
