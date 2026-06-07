@@ -92,7 +92,7 @@ function AssetRow({ asset }: { asset: Asset }) {
               <img
                 src={asset.icon}
                 alt={`${asset.name} token icon`}
-                className="tok-icon w-8 h-8"
+                className="tok-icon"
               />
               {hasSubassets ? '' : <img src={`https://cdn.jatare.xyz/chains/${asset.chain}.svg`} alt={`${asset.chain} chain icon`} className="chain-icon" />}
             </div>

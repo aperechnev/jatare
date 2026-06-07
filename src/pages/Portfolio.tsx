@@ -1,6 +1,6 @@
 import './Portfolio.css'
 import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import PortfolioTable from "@/components/PortfolioTable"
 import { getWallet } from "@/api/portfolioApi"
@@ -9,6 +9,7 @@ import { makeDebtInfo } from '@/types/DebtInfo'
 import { formatBalance } from '@/utils/formatting'
 
 export default function PortfolioPage() {
+  const navigate = useNavigate()
   const params = useParams<{ address: string }>()
 
   const [total, setTotal] = useState(0)
@@ -78,7 +79,9 @@ export default function PortfolioPage() {
               <span>${formatBalance(assetsTotal)}</span> assets &nbsp;·&nbsp; <span className="bad">−${formatBalance(debtTotal)}</span> debt
             </div>
           </div>
-          <button className="rebal-btn">
+          <button className="rebal-btn" onClick={() => navigate(
+            `/portfolio/${address}/rebalancing`
+          )}>
             <i className="ti ti-adjustments-horizontal" aria-hidden="true" style={{ fontSize: "13px" }}></i>Rebalance
           </button>
         </div>

@@ -4,6 +4,7 @@ import Layout from "./layout/Layout"
 
 import FrontPage from "./pages/FrontPage"
 import Portfolio from "./pages/Portfolio"
+import Rebalancing from "./pages/Rebalancing/Rebalancing"
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
 
         <Route path="/" element={<FrontPage />} />
         <Route path="/portfolio/:address" element={<Portfolio />} />
+        <Route path="/portfolio/:address/rebalancing" element={<Rebalancing />} />
 
       </Route>
 

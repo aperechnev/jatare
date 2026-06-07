@@ -1,0 +1,59 @@
+.warn {
+  font-size: var(--font-text-sm-size);
+  color: #854F0B;
+  background: #faeeda;
+  border-radius: 6px;
+  padding: 9px 14px;
+  margin-bottom: 1.5rem;
+}
+
+.asset-row {
+  padding: 1.75rem 0;
+  border-bottom: .5px solid var(--color-border-tertiary);
+}
+
+.ar-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.delta {
+  font-size: var(--font-text-sm-size);
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.delta-ok {
+  background: #e1f5ee;
+  color: #0f6e56;
+}
+
+.delta-under {
+  background: #e6f1fb;
+  color: #185FA5;
+}
+
+.delta-over {
+  background: #fcebeb;
+  color: #a32d2d;
+}
+
+.trade-hint {
+  font-size: var(--font-text-md-size);
+  color: var(--color-text-tertiary);
+  margin-top: 18px;
+}
+
+.trade-hint.buy {
+  color: #185FA5;
+}
+
+.trade-hint.sell {
+  color: #a32d2d;
+}
