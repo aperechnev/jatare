@@ -11,8 +11,18 @@
   margin-bottom: 2.5rem;
 }
 
+@media (max-width: 860px) {
+    .ft-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .ft-grid > :first-child {
+        grid-column: 1 / -1;
+    }
+}
+
 .ft-brand .logo {
-  font-size: var(--font-text-md-size);
+  font-size: var(--font-text-lg-size);
   font-weight: 500;
   color: var(--color-brand);
   letter-spacing: -.3px;
@@ -20,10 +30,10 @@
 }
 
 .ft-brand p {
-  font-size: var(--font-text-xs-size);
+  font-size: var(--font-text-md-size);
   color: var(--color-text-tertiary);
   line-height: 1.7;
-  max-width: 320px;
+  max-width: 420px;
 }
 
 .networks {
@@ -34,7 +44,7 @@
 }
 
 .net {
-  font-size: var(--font-text-xs-size);
+  font-size: var(--font-text-sm-size);
   color: var(--color-text-tertiary);
   border: .5px solid var(--color-border-tertiary);
   border-radius: 4px;
@@ -42,7 +52,7 @@
 }
 
 .ft-col h4 {
-  font-size: var(--font-text-sm-size);
+  font-size: var(--font-text-md-size);
   font-weight: 500;
   color: var(--color-text-secondary);
   text-transform: uppercase;
@@ -52,7 +62,7 @@
 
 .ft-col a {
   display: block;
-  font-size: var(--font-text-xs-size);
+  font-size: var(--font-text-sm-size);
   color: var(--color-text-tertiary);
   text-decoration: none;
   margin-bottom: .5rem;
