@@ -88,7 +88,7 @@
   border-color: currentcolor;
   border-image: initial;
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: var(--font-text-sm-size);
   font-weight: 500;
   cursor: pointer;
   text-align: left;

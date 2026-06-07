@@ -39,6 +39,11 @@ export default function Header() {
     navigate(`/portfolio/${address}`)
   }
 
+  function handleRebalancing() {
+    setIsOpen(false)
+    navigate(`/portfolio/${address}/rebalancing`)
+  }
+
   useEffect(() => {
     if (!isConnected || !address) return
 
@@ -121,6 +126,10 @@ export default function Header() {
 
             <button onClick={handlePortfolio}>
               <i className="ti ti-wallet" aria-hidden="true"></i> Portfolio
+            </button>
+
+            <button onClick={handleRebalancing}>
+              <i className="ti ti-adjustments-horizontal" aria-hidden="true"></i> Rebalancing
             </button>
 
             <div className="divider"></div>
