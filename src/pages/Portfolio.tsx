@@ -70,8 +70,8 @@ export default function PortfolioPage() {
 
       <main className="min-h-screen p-10">
 
-        <div className="phead">
-          <div>
+        <div className="phead-wrapper">
+          <div className="phead">
             <div className="plabel">Portfolio</div>
             <div className="pvalue">${formatBalance(total)}</div>
             <div className="pbreakdown">
