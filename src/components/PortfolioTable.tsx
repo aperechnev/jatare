@@ -14,8 +14,7 @@ type AssetList = {
 function makeSubassetRow(token: Asset, index: number, cls: string) {
   return (
     <tr
-      className={`sub-row ${cls}`}
-      style={{ display: "none" }}
+      className={`sub-row sub-row-hidden ${cls}`}
     >
       <td>
         <div className="tc">
@@ -69,10 +68,11 @@ function AssetRow({ asset }: { asset: Asset }) {
       .forEach((el) => {
         const htmlEl = el as HTMLElement;
 
-        htmlEl.style.display =
-          htmlEl.style.display === 'none'
-            ? 'table-row'
-            : 'none';
+        if (htmlEl.classList.contains("sub-row-hidden")) {
+          htmlEl.classList.remove("sub-row-hidden")
+        } else {
+          htmlEl.classList.add("sub-row-hidden")
+        }
       });
 
     setSubassetsOpened(!subassetsOpened)
@@ -203,11 +203,11 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
           <table>
             <thead>
               <tr>
-                <th style={{ width: "25%", textAlign: "left" }}>Token</th>
-                <th style={{ width: "17%" }}>Price</th>
-                <th style={{ width: "17%" }}>Amount</th>
-                <th style={{ width: "17%" }}>Value</th>
-                <th style={{ width: "24%" }}>Allocation</th>
+                <th className="token">Token</th>
+                <th className="price">Price</th>
+                <th className="amount">Amount</th>
+                <th className="value">Value</th>
+                <th className="allocation">Allocation</th>
               </tr>
             </thead>
             <tbody id="assetBody">
@@ -224,11 +224,11 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
           <table style={{ marginTop: "6px" }}>
             <thead>
               <tr>
-                <th style={{ width: "25%", textAlign: "left" }}></th>
-                <th style={{ width: "17%" }}></th>
-                <th style={{ width: "17%" }}></th>
-                <th style={{ width: "17%" }}></th>
-                <th style={{ width: "24%" }}></th>
+                <th className="token"></th>
+                <th className="price"></th>
+                <th className="amount"></th>
+                <th className="value"></th>
+                <th className="allocation"></th>
               </tr>
             </thead>
             <tbody>

@@ -11,14 +11,14 @@
   margin-bottom: 2.5rem;
 }
 
-@media (max-width: 860px) {
-    .ft-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+@media (max-width: 768px) {
+  .ft-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
-    .ft-grid > :first-child {
-        grid-column: 1 / -1;
-    }
+  .ft-grid> :first-child {
+    grid-column: 1 / -1;
+  }
 }
 
 .ft-brand .logo {

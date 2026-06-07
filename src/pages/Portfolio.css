@@ -29,6 +29,12 @@
   margin-bottom: 2rem;
 }
 
+@media (max-width: 768px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .mc {
   padding: 12px 0;
   border-top: .5px solid var(--color-border-tertiary);

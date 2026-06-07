@@ -5,7 +5,11 @@ body {
 main {
   max-width: 1300px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 8px;
+}
+
+header {
+  padding: 0 10px;
 }
 
 h1 {
@@ -130,4 +134,28 @@ tbody td {
 
 tbody td:first-child {
   text-align: left;
+}
+
+@media (max-width: 768px) {
+  thead {
+    display: none;
+  }
+
+  tbody td {
+    border-bottom: 0;
+  }
+
+  tr {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  td:first-child {
+    width: 100%;
+  }
+
+  td:last-child {
+    width: 100%;
+    margin-bottom: 24px;
+  }
 }

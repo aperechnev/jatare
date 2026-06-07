@@ -1,6 +1,26 @@
+th.token {
+  width: 25%;
+  text-align: left;
+}
+
+th.price,
+th.amount,
+th.value {
+  width: 17%;
+}
+
+th.allocation {
+  width: 24%;
+}
+
+@media (max-width: 768px) {
+  td {
+    width: 33%;
+  }
+}
+
 .grid2 {
   display: grid;
-  /* grid-template-columns: 1fr 15vw; */
   grid-template-columns: 1fr;
   gap: 2.5vw;
   margin-top: 6vh;
@@ -10,7 +30,7 @@
 .tc {
   display: flex;
   align-items: center;
-  gap: 0.8vw;
+  gap: 15px;
 }
 
 .token-wrap {
@@ -119,6 +139,18 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 768px) {
+  .bw {
+    justify-content: space-between;
+  }
+
+  .bt {
+    width: 84%;
+    left: 0px;
+    right: 0px;
+  }
+}
+
 .bf {
   height: 100%;
   border-radius: 2px;
@@ -133,6 +165,12 @@
 .sub-row td {
   background: var(--color-background-tertiary);
   border-bottom: .5px solid var(--color-border-tertiary);
+}
+
+@media (max-width: 768px) {
+  .sub-row td {
+    border-bottom: 0;
+  }
 }
 
 .sub-row td:first-child {
@@ -185,4 +223,8 @@
   font-weight: 500;
   font-size: var(--font-text-md-size);
   color: var(--color-text-primary);
+}
+
+tr.sub-row-hidden {
+  display: none;
 }

@@ -78,7 +78,7 @@ export default function Header() {
   return (
     <header>
 
-      <div className="h-16 px-6 flex items-center justify-between">
+      <div className="h-16 flex items-center justify-between">
 
         <Link to="/">
           <h1 className="logo nav-logo">
