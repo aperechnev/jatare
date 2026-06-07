@@ -4,31 +4,11 @@ import type { Asset } from "@/types/Asset"
 import type { DebtInfo } from "@/types/DebtInfo";
 import { makeDebtInfo } from "@/types/DebtInfo";
 import { formatBalance, capitalize } from "@/utils/formatting";
-
+import groupTokens from "@/utils/grouping";
 
 type AssetList = {
   items: Asset[]
   total: number
-}
-
-function groupTokens(tokens: Asset[]): Asset[] {
-  const groupedAssets: Asset[] = []
-
-  tokens.forEach((t: Asset) => {
-    const existing = groupedAssets.find((a: { asset: string }) => a.asset === t.asset)
-    if (existing) {
-      existing.value += t.value
-      existing.balance += t.balance
-      existing.percentage += t.percentage
-      existing.tokens.push(t)
-    } else {
-      const newAsset = { ...t }
-      newAsset.tokens = [t]
-      groupedAssets.push(newAsset)
-    }
-  })
-
-  return groupedAssets
 }
 
 function makeSubassetRow(token: Asset, index: number, cls: string) {
