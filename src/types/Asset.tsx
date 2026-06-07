@@ -2,6 +2,7 @@ export type Asset = {
   chain: string
   icon: string
   name: string
+  accent_color: string
   symbol: string
   asset: string
   price: number
