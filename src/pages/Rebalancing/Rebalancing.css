@@ -50,10 +50,35 @@
   margin-top: 18px;
 }
 
-.trade-hint.buy {
+.buy {
   color: #185FA5;
 }
 
-.trade-hint.sell {
+.sell {
   color: #a32d2d;
+}
+
+.summary {
+  border-top: .5px solid var(--color-border-tertiary);
+  padding-top: 2rem;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+
+.sum-hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.sum-title {
+  font-size: var(--font-heading-xl-size);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.sum-total {
+  font-size: var(--font-heading-xl-size);
+  color: var(--color-text-secondary);
 }

@@ -2,6 +2,7 @@ import './Rebalancing.css'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import RebalancingRow from './RebalancingRow'
+import TradeRow from './TradeRow'
 import type { Asset } from '@/types/Asset'
 import { getWallet } from "@/api/portfolioApi"
 import groupTokens from '@/utils/grouping'
@@ -96,51 +97,30 @@ export default function RebalancingPage() {
         ))}
       </div>
 
-      {/* <div className="summary">
-        <div className="sum-row">
-          <span className="sum-label">Total allocated</span>
-          <span className="sum-val" id="totalPct">100.0%</span>
+      <div className="summary">
+        <div className="sum-hd">
+          <span className="sum-title">Trade summary</span>
+          <span className="sum-total">Total: <strong id="totalPct">{targetsSummary.toFixed(1)}%</strong></span>
         </div>
         <table>
           <thead><tr>
-            <th style={{ width: "28%", textAlign: "left" }}>Asset</th>
-            <th style={{ width: "18%" }}>Current</th>
-            <th style={{ width: "18%" }}>Target</th>
-            <th style={{ width: "18%" }}>Δ</th>
-            <th style={{ width: "18%" }}>Trade</th>
+            <th style={{ width: "26%", textAlign: "left" }}>Asset</th>
+            <th style={{ width: "16%" }}>Current</th>
+            <th style={{ width: "16%" }}>Target</th>
+            <th style={{ width: "16%" }}>Diff</th>
+            <th style={{ width: "26%" }}>Action</th>
           </tr></thead>
           <tbody id="tbl">
-            <tr>
-              <td style={{ color: "var(--color-text-primary)", fontWeight: 500 }}>ETH</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>40.0%</td>
-              <td>40.0%</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>+0.1%</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>—</td>
-            </tr>
-            <tr>
-              <td style={{ color: "var(--color-text-primary)", fontWeight: 500 }}>BTC</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>39.4%</td>
-              <td>40.0%</td>
-              <td style={{ color: "#185FA5" }}>+0.6%</td>
-              <td style={{ color: "#1d9e75" }}>+$3.66</td>
-            </tr>
-            <tr>
-              <td style={{ color: "var(--color-text-primary)", fontWeight: 500 }}>USDC</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>10.3%</td>
-              <td>10.0%</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>-0.3%</td>
-              <td style={{ color: "#a32d2d" }}>-$2.03</td>
-            </tr>
-            <tr>
-              <td style={{ color: "var(--color-text-primary)", fontWeight: 500 }}>XAUT</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>10.3%</td>
-              <td>10.0%</td>
-              <td style={{ color: "var(--color-text-tertiary)" }}>-0.3%</td>
-              <td style={{ color: "#a32d2d" }}>-$1.96</td>
-            </tr>
+            {assets.map((a: Asset) => (
+              <TradeRow
+                asset={a}
+                target={targetList[a.symbol] ?? 0}
+                total={total}
+              />
+            ))}
           </tbody>
         </table>
-      </div> */}
+      </div>
 
     </main>
   )
