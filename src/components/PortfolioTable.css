@@ -181,7 +181,6 @@ th.allocation {
   font-size: var(--font-text-sm-size);
   color: var(--color-text-tertiary);
   padding: 5vh 0 0.5vh;
-  border-top: .5px solid var(--color-border-tertiary);
   display: flex;
   gap: 14px;
   align-items: center;

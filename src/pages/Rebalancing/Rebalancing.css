@@ -12,6 +12,10 @@
   border-bottom: .5px solid var(--color-border-tertiary);
 }
 
+#rows .asset-row:last-child {
+  border-bottom: 0;
+}
+
 .ar-top {
   display: flex;
   align-items: center;
