@@ -50,6 +50,7 @@ th.allocation {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--color-background-primary);
 }
 
 .sub-tok-icon {
@@ -71,6 +72,7 @@ th.allocation {
   align-items: center;
   justify-content: center;
   color: #fff;
+  background-color: var(--color-background-secondary);
 }
 
 .tn {
