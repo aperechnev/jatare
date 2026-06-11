@@ -9,3 +9,7 @@ export function capitalize(s: string) {
   if (!s) return s
   return s[0].toUpperCase() + s.substr(1).toLowerCase();
 }
+
+export function shortenAddress(address: string) {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
+}

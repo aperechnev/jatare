@@ -1,12 +1,37 @@
 import './FrontPage.css'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
+import { getStat } from "@/api/stat"
+import { shortenAddress } from '@/utils/formatting'
+
+function RecentWalletLink({ wallet }: { wallet: string }) {
+  const link = `/portfolio/${wallet}`
+  return (
+    <a className="recent-chip" href={link}>{shortenAddress(wallet)}</a>
+  )
+}
 
 export default function FrontPage() {
   const [address, setAddress] = useState("")
   const navigate = useNavigate()
+
+  const [chains, setChains] = useState([])
+  const [walletsCount, setWalletsCount] = useState(0)
+  const [recentWallets, setRecentWallets] = useState([])
+
+  useEffect(() => {
+    async function loadStat() {
+      const stat = await getStat()
+
+      setChains(stat.chains)
+      setWalletsCount(stat.wallets_count)
+      setRecentWallets(stat.recent_wallets)
+    }
+
+    loadStat()
+  }, [])
 
   function handleAnalyse() {
     if (!address) return
@@ -22,7 +47,7 @@ export default function FrontPage() {
       <div className="min-h-[calc(100vh-42vh)] flex flex-col items-center justify-center">
 
         <div className="hero">
-          <div className="hero-tag"><span></span> Live on-chain data · 4 networks</div>
+          <div className="hero-tag"><span></span> Live on-chain data · {chains.length} networks</div>
           <h1>Your <em>DeFi portfolio</em>,<br />clearly understood</h1>
           <p className="subtitle">Track assets, debt, and allocation across every wallet. Set rebalancing targets and know exactly what to buy or sell.</p>
 
@@ -37,9 +62,7 @@ export default function FrontPage() {
 
           <div className="recent">
             <span>Recent:</span>
-            <span className="recent-chip">0xFca8…Fe6</span>
-            <span className="recent-chip">vitalik.eth</span>
-            <span className="recent-chip">0xd8dA…6045</span>
+            {recentWallets.map((w) => (<RecentWalletLink wallet={w} />))}
           </div>
         </div>
 
@@ -73,11 +96,11 @@ export default function FrontPage() {
             <div className="stat-lbl">Portfolio value tracked</div>
           </div>
           <div className="stat">
-            <div className="stat-val">140K+</div>
+            <div className="stat-val">{walletsCount}</div>
             <div className="stat-lbl">Wallets analysed</div>
           </div>
           <div className="stat">
-            <div className="stat-val">4</div>
+            <div className="stat-val">{chains.length}</div>
             <div className="stat-lbl">Networks supported</div>
           </div>
         </div>
