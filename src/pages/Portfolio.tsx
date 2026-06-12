@@ -28,7 +28,7 @@ export default function PortfolioPage() {
     }
 
     load()
-  }, [])
+  }, [address])
 
   useEffect(() => {
     const debtInfo = makeDebtInfo(portfolio.assetsTotal, portfolio.debtTotal)
