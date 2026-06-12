@@ -58,6 +58,11 @@ export async function portfolioProvider(wallet: string): Promise<Portfolio> {
   var tokens: PortfolioAsset[] = await fetchTokens(wallet)
   tokens.forEach(t => { t.value = t.price * t.balance })
   tokens = tokens.filter((t) => Math.abs(t.value) > 0.01)
+  tokens.forEach((t) => {
+    if ((t.accent_color ?? "").length == 0) {
+      t.accent_color = "#000000"
+    }
+  })
 
   const total: number = tokens.reduce((acc: number, t: PortfolioAsset) => acc + t.value, 0)
 

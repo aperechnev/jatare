@@ -120,7 +120,7 @@ function AssetRow({ asset }: { asset: PortfolioAsset }) {
             <div className="bt">
               <div className="bf" style={{
                 width: `${asset.percentage}%`,
-                backgroundColor: asset.isDebt ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
+                backgroundColor: asset.accent_color
               }}></div>
             </div>
           </div>
