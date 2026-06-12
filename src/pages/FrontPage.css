@@ -59,10 +59,6 @@ h1 em {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.ti-search:before {
-  content: "\eb1c";
-}
-
 .recent {
   display: flex;
   align-items: center;
