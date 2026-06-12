@@ -1,7 +1,7 @@
 import './FrontPage.css'
 import { useState, useEffect } from "react"
 import { Helmet } from "react-helmet-async"
-import { getStat } from "@/api/stat"
+import { fetchStat } from '@/providers/api'
 import SearchBox from '@/components/SearchBox/SearchBox'
 import { shortenAddress } from '@/utils/formatting'
 
@@ -19,7 +19,7 @@ export default function FrontPage() {
 
   useEffect(() => {
     async function loadStat() {
-      const stat = await getStat()
+      const stat = await fetchStat()
 
       setChains(stat.chains)
       setWalletsCount(stat.wallets_count)

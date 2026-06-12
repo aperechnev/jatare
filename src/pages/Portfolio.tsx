@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import PortfolioTable from "@/components/PortfolioTable"
-import { getWallet } from "@/api/portfolioApi"
+import { fetchTokens } from '@/providers/api'
 import type { Asset } from '@/types/Asset'
 import { makeDebtInfo } from '@/types/DebtInfo'
 import { formatBalance } from '@/utils/formatting'
@@ -27,7 +27,7 @@ export default function PortfolioPage() {
 
   useEffect(() => {
     async function load() {
-      const tokens = await getWallet(address)
+      const tokens = await fetchTokens(address)
 
       tokens.forEach((t: { price: number; balance: number; value?: number }) => {
         t.value = t.price * t.balance

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import RebalancingRow from './RebalancingRow'
 import TradeRow from './TradeRow'
 import type { Asset } from '@/types/Asset'
-import { getWallet } from "@/api/portfolioApi"
+import { fetchTokens } from '@/providers/api'
 import groupTokens from '@/utils/grouping'
 
 export default function RebalancingPage() {
@@ -23,7 +23,7 @@ export default function RebalancingPage() {
 
   useEffect(() => {
     async function load() {
-      const tokens = await getWallet(address)
+      const tokens = await fetchTokens(address)
 
       tokens.forEach((t: { price: number; balance: number; value?: number }) => {
         t.value = t.price * t.balance
