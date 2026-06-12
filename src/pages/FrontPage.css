@@ -47,24 +47,6 @@ h1 em {
   margin: 0 auto 6rem;
 }
 
-.search-box {
-  display: flex;
-  align-items: center;
-  background: var(--color-background-primary);
-  border: .5px solid var(--color-border-secondary);
-  border-radius: 10px;
-  padding: 4px 4px 4px 14px;
-  width: 620px;
-  margin: 0 auto 1.5rem;
-  gap: 8px;
-}
-
-.search-box i {
-  color: var(--color-text-tertiary);
-  font-size: var(--font-text-lg-size);
-  flex-shrink: 0;
-}
-
 .ti {
   font-family: "tabler-icons" !important;
   speak: none;
@@ -79,51 +61,6 @@ h1 em {
 
 .ti-search:before {
   content: "\eb1c";
-}
-
-.search-box input {
-  width: 100%;
-  height: 36px;
-  padding: 8px 12px;
-  font-size: var(--font-text-md-size);
-  font-family: var(--font-mono);
-  background: var(--color-background-primary);
-  color: var(--color-text-primary);
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: 6px;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.search-box input:hover {
-  border-color: var(--color-border-secondary);
-}
-
-.search-box input:focus {
-  border-color: var(--color-border-info);
-  box-shadow: 0 0 0 3px var(--color-background-info);
-}
-
-.search-box button {
-  padding: 4px 16px;
-  height: 36px;
-  font-size: var(--font-text-md-size);
-  font-weight: 500;
-  background: transparent;
-  color: var(--color-text-primary);
-  border: 0.5px solid var(--color-border-secondary);
-  border-radius: var(--border-radius-md);
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
-}
-
-.search-box button:hover {
-  background: var(--color-background-secondary);
-}
-
-.search-box button:active {
-  background: var(--color-border-tertiary);
-  transform: scale(0.98);
 }
 
 .recent {

@@ -1,9 +1,8 @@
 import './FrontPage.css'
-
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { getStat } from "@/api/stat"
+import SearchBox from '@/components/SearchBox/SearchBox'
 import { shortenAddress } from '@/utils/formatting'
 
 function RecentWalletLink({ wallet }: { wallet: string }) {
@@ -14,9 +13,6 @@ function RecentWalletLink({ wallet }: { wallet: string }) {
 }
 
 export default function FrontPage() {
-  const [address, setAddress] = useState("")
-  const navigate = useNavigate()
-
   const [chains, setChains] = useState([])
   const [walletsCount, setWalletsCount] = useState(0)
   const [recentWallets, setRecentWallets] = useState([])
@@ -33,11 +29,6 @@ export default function FrontPage() {
     loadStat()
   }, [])
 
-  function handleAnalyse() {
-    if (!address) return
-    navigate(`/portfolio/${address}`)
-  }
-
   return (
     <>
       <Helmet>
@@ -51,14 +42,7 @@ export default function FrontPage() {
           <h1>Your <em>DeFi portfolio</em>,<br />clearly understood</h1>
           <p className="subtitle">Track assets, debt, and allocation across every wallet. Set rebalancing targets and know exactly what to buy or sell.</p>
 
-          <div className="search-box">
-            <i className="ti ti-search" aria-hidden="true"></i>
-            <input type="text"
-              placeholder="Wallet address or ENS name (e.g. vitalik.eth)"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)} />
-            <button className="search-btn" onClick={handleAnalyse}>Analyse</button>
-          </div>
+          <SearchBox />
 
           <div className="recent">
             <span>Recent:</span>
