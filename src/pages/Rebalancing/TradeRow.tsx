@@ -1,9 +1,9 @@
-import type { Asset } from "@/types/Asset"
+import type { PortfolioAsset } from "@/providers/portfolio"
 import { formatBalance } from "@/utils/formatting"
 
 export default function TradeRow(
   { asset, target, total }: {
-    asset: Asset,
+    asset: PortfolioAsset,
     target: number,
     total: number
   }

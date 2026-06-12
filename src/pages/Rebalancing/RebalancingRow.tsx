@@ -1,13 +1,13 @@
 import './Rebalancing.css'
 import RangeBar from '@/components/RangeBar/RangeBar'
-import type { Asset } from '@/types/Asset'
+import type { PortfolioAsset } from '@/providers/portfolio'
 import { formatBalance } from '@/utils/formatting'
 import { useEffect, useState } from 'react'
 
 export default function RebalancingRow(
   { total, asset, onTargetChange }: {
     total: number,
-    asset: Asset,
+    asset: PortfolioAsset,
     onTargetChange: (percentage: number) => void
   }
 ) {

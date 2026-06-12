@@ -3,46 +3,26 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import RebalancingRow from './RebalancingRow'
 import TradeRow from './TradeRow'
-import type { Asset } from '@/types/Asset'
-import { fetchTokens } from '@/providers/api'
-import groupTokens from '@/utils/grouping'
+import { portfolioProvider, defaultPortfolio } from '@/providers/portfolio'
+import type { Portfolio, PortfolioAsset } from '@/providers/portfolio'
 
 export default function RebalancingPage() {
   const navigate = useNavigate()
   const params = useParams<{ address: string }>()
   const address = params.address ?? ""
-  const [assets, setAssets] = useState<Asset[]>([])
-  const [total, setTotal] = useState<number>(0)
+  const [portfolio, setPortfolio] = useState<Portfolio>(defaultPortfolio)
 
   const [targetList, setTargetList] = useState<Record<string, number>>(
     Object.fromEntries(
-      assets.map(a => [a.symbol, 0])
+      portfolio.assetList.map(a => [a.symbol, 0])
     )
   )
   const [targetsSummary, setTargetsSummary] = useState(0)
 
   useEffect(() => {
     async function load() {
-      const tokens = await fetchTokens(address)
-
-      tokens.forEach((t: { price: number; balance: number; value?: number }) => {
-        t.value = t.price * t.balance
-      })
-
-      const assets = tokens
-        .filter((t: Asset) => t.value > 0)
-        .sort((a: Asset, b: Asset) => b.value - a.value)
-
-      const assetsTotal = assets.reduce((acc: number, t: Asset) => acc + t.value, 0)
-      setTotal(assetsTotal)
-
-      const assetsWithPercentage = assets.map((t: Asset) => ({
-        ...t,
-        percentage: (t.value / assetsTotal) * 100
-      }))
-
-      const groupedAssets = groupTokens(assetsWithPercentage)
-      setAssets(groupedAssets)
+      const portfolio = await portfolioProvider(address)
+      setPortfolio(portfolio)
     }
 
     load()
@@ -83,9 +63,9 @@ export default function RebalancingPage() {
       </div>
 
       <div id="rows">
-        {assets.map((a: Asset) => (
+        {portfolio.assetList.map((a: PortfolioAsset) => (
           <RebalancingRow
-            total={total}
+            total={portfolio.assetsTotal}
             asset={a}
             onTargetChange={t => {
               setTargetList(prev => ({
@@ -111,11 +91,11 @@ export default function RebalancingPage() {
             <th style={{ width: "26%" }}>Action</th>
           </tr></thead>
           <tbody id="tbl">
-            {assets.map((a: Asset) => (
+            {portfolio.assetList.map((a: PortfolioAsset) => (
               <TradeRow
                 asset={a}
                 target={targetList[a.symbol] ?? 0}
-                total={total}
+                total={portfolio.assetsTotal}
               />
             ))}
           </tbody>

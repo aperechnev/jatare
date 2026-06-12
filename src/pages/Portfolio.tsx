@@ -3,65 +3,42 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import PortfolioTable from "@/components/PortfolioTable"
-import { fetchTokens } from '@/providers/api'
-import type { Asset } from '@/types/Asset'
 import { makeDebtInfo } from '@/types/DebtInfo'
 import { formatBalance } from '@/utils/formatting'
+import type { Portfolio } from '@/providers/portfolio'
+import { portfolioProvider, defaultPortfolio } from '@/providers/portfolio'
 
 export default function PortfolioPage() {
   const navigate = useNavigate()
   const params = useParams<{ address: string }>()
+  const address = params.address ?? ""
 
-  const [total, setTotal] = useState(0)
-  const [assetsTotal, setAssetsTotal] = useState(0)
-  const [assetsCount, setAssetsCount] = useState(0)
-  const [debtTotal, setDebtTotal] = useState(0)
+  const [portfolio, setPortfolio] = useState<Portfolio>(defaultPortfolio)
+
   const [ltv, setLtv] = useState<{ value: number, hint: string, color: string }>({
     value: 0,
     hint: "",
     color: "transparent"
   })
 
-  const [wallet, setWallet] = useState([])
-  const address = params.address ?? ""
-
   useEffect(() => {
     async function load() {
-      const tokens = await fetchTokens(address)
-
-      tokens.forEach((t: { price: number; balance: number; value?: number }) => {
-        t.value = t.price * t.balance
-      })
-
-      const total = tokens.reduce((acc: number, t: { value: number }) => acc + t.value, 0)
-      setTotal(total)
-
-      const assets = tokens.filter((t: Asset) => t.value > 0)
-      setAssetsTotal(
-        assets.reduce((acc: number, t: Asset) => acc + t.value, 0)
-      )
-      setAssetsCount(
-        (new Set(assets.map((t: Asset) => t.asset))).size
-      )
-
-      const debtTotal = -1 * tokens.filter((t: Asset) => t.value < 0).reduce((acc: number, t: Asset) => acc + t.value, 0)
-      setDebtTotal(debtTotal)
-
-      setWallet(tokens)
+      const response = await portfolioProvider(address)
+      setPortfolio(response)
     }
 
     load()
   }, [])
 
   useEffect(() => {
-    const debtInfo = makeDebtInfo(assetsTotal, debtTotal)
+    const debtInfo = makeDebtInfo(portfolio.assetsTotal, portfolio.debtTotal)
 
     setLtv({
       value: debtInfo.percent,
       hint: debtInfo.shortDescription,
       color: debtInfo.color
     })
-  }, [assetsTotal, debtTotal])
+  }, [portfolio])
 
   return (
     <>
@@ -74,9 +51,11 @@ export default function PortfolioPage() {
         <div className="phead-wrapper">
           <div className="phead">
             <div className="plabel">Portfolio</div>
-            <div className="pvalue">${formatBalance(total)}</div>
+            <div className="pvalue">
+              ${formatBalance(portfolio.total)}
+            </div>
             <div className="pbreakdown">
-              <span>${formatBalance(assetsTotal)}</span> assets &nbsp;·&nbsp; <span className="bad">−${formatBalance(debtTotal)}</span> debt
+              <span>${formatBalance(portfolio.assetsTotal)}</span> assets &nbsp;·&nbsp; <span className="bad">−${formatBalance(portfolio.debtTotal)}</span> debt
             </div>
           </div>
           <button className="rebal-btn" onClick={() => navigate(
@@ -89,16 +68,20 @@ export default function PortfolioPage() {
         <div className="metrics">
           <div className="mc">
             <div className="ml">Assets</div>
-            <div className="mv">${formatBalance(assetsTotal)}</div>
-            <div className="ms">{(assetsCount == 1 ? `1 position` : `${assetsCount} positions`)}</div>
+            <div className="mv">
+              ${formatBalance(portfolio.assetsTotal)}
+            </div>
+            <div className="ms">
+              {(portfolio.assetsCount == 1 ? `1 position` : `${portfolio.assetsCount} positions`)}
+            </div>
           </div>
           <div className="mc">
             <div className="ml">Debt</div>
             <div className="mv"
               style={{
-                color: debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
+                color: portfolio.debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
               }}
-            >${formatBalance(debtTotal)}</div>
+            >${formatBalance(portfolio.debtTotal)}</div>
             <div className="ms">Aave Protocol</div>
           </div>
           <div className="mc">
@@ -113,7 +96,7 @@ export default function PortfolioPage() {
           </div>
         </div>
 
-        <PortfolioTable wallet={wallet} />
+        <PortfolioTable portfolio={portfolio} />
 
       </main>
     </>

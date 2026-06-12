@@ -1,17 +1,11 @@
 import "./PortfolioTable.css"
 import { useEffect, useState } from "react";
-import type { Asset } from "@/types/Asset"
+import type { Portfolio, PortfolioAsset } from "@/providers/portfolio";
 import type { DebtInfo } from "@/types/DebtInfo";
 import { makeDebtInfo } from "@/types/DebtInfo";
 import { formatBalance, capitalize } from "@/utils/formatting";
-import groupTokens from "@/utils/grouping";
 
-type AssetList = {
-  items: Asset[]
-  total: number
-}
-
-function makeSubassetRow(token: Asset, index: number, cls: string) {
+function makeSubassetRow(token: PortfolioAsset, index: number, cls: string) {
   return (
     <tr
       className={`sub-row sub-row-hidden ${cls}`}
@@ -56,7 +50,7 @@ function makeSubassetRow(token: Asset, index: number, cls: string) {
   )
 }
 
-function AssetRow({ asset }: { asset: Asset }) {
+function AssetRow({ asset }: { asset: PortfolioAsset }) {
   const [subassetsOpened, setSubassetsOpened] = useState(false)
 
   const hasSubassets = asset.tokens.length > 1
@@ -141,60 +135,12 @@ function AssetRow({ asset }: { asset: Asset }) {
   )
 }
 
-function PortfolioTable({ wallet }: { wallet: Asset[] }) {
-  const [assets, setAssets] = useState<AssetList>({ items: [], total: 0})
-  const [debts, setDebts] = useState<AssetList>({ items: [], total: 0})
-
+function PortfolioTable({ portfolio }: { portfolio: Portfolio }) {
   const [debtInfo, setDebtInfo] = useState<DebtInfo>()
 
   useEffect(() => {
-    if (!wallet.length) return
-
-    const sorted = [...wallet].sort((a, b) => b.value - a.value)
-
-    // Set assets
-
-    const assetsList = sorted.filter(t => t.value > 0)
-
-    const assetsTotal = assetsList.reduce((acc, t) => acc + t.value, 0)
-
-    const assetsWithPercent = assetsList.map(t => ({
-      ...t,
-      percentage: (t.value / assetsTotal) * 100
-    }))
-
-    setAssets({
-      items: groupTokens(assetsWithPercent),
-      total: assetsTotal
-    })
-
-    // Set debts
-
-    const debtList = sorted
-      .filter(t => t.value < 0)
-      .map(t => ({
-        ...t,
-        price: -t.price,
-        value: -t.value,
-        isDebt: true,
-      }))
-
-    const debtTotal = debtList.reduce((acc, t) => acc + t.value, 0)
-
-    const debtWithPercent = debtList.map(t => ({
-      ...t,
-      percentage: (t.value / debtTotal) * 100
-    }))
-
-    setDebts({
-      items: groupTokens(debtWithPercent),
-      total: debtTotal
-    })
-  }, [wallet])
-
-  useEffect(() => {
-    setDebtInfo(makeDebtInfo(assets.total, debts.total))
-  }, [assets, debts])
+    setDebtInfo(makeDebtInfo(portfolio.assetsTotal, portfolio.debtTotal))
+  }, [portfolio])
 
   return (
     <>
@@ -211,12 +157,12 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
               </tr>
             </thead>
             <tbody id="assetBody">
-              {assets.items.map((t, i) => <AssetRow asset={t} />)}
+              {portfolio.assetList.map((t, i) => <AssetRow asset={t} />)}
             </tbody>
           </table>
 
           <div className="sec">
-            <span>Debt ${debts.total.toFixed(2)}</span>
+            <span>Debt ${portfolio.debtTotal.toFixed(2)}</span>
             <span>·</span>
             <span>LTV {debtInfo?.percent.toFixed(2) ?? 0}%</span>
             <span className="dbadge">{debtInfo?.label ?? "Unknown"}</span>
@@ -232,7 +178,7 @@ function PortfolioTable({ wallet }: { wallet: Asset[] }) {
               </tr>
             </thead>
             <tbody>
-              {debts.items.map((t, i) => (<AssetRow asset={t} />))}
+              {portfolio.debtList.map((t, i) => (<AssetRow asset={t} />))}
             </tbody>
           </table>
         </div>
