@@ -50,6 +50,11 @@ export default function SearchBox() {
           value={address}
           placeholder="Ethereum address or ENS name (e.g. vitalik.eth)"
           onChange={(e) => setAddress(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter") return
+            if (!isValidInput) return
+            handleAnalyse()
+          }}
         />
 
         {showHint && (
