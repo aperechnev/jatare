@@ -7,12 +7,14 @@ import { makeDebtInfo } from '@/types/DebtInfo'
 import { formatBalance } from '@/utils/formatting'
 import type { Portfolio } from '@/providers/portfolio'
 import { portfolioProvider, defaultPortfolio } from '@/providers/portfolio'
+import LoaderBox from './LoaderBox'
 
 export default function PortfolioPage() {
   const navigate = useNavigate()
   const params = useParams<{ address: string }>()
   const address = params.address ?? ""
 
+  const [isLoading, setIsLoading] = useState(true)
   const [portfolio, setPortfolio] = useState<Portfolio>(defaultPortfolio)
 
   const [ltv, setLtv] = useState<{ value: number, hint: string, color: string }>({
@@ -25,6 +27,7 @@ export default function PortfolioPage() {
     async function load() {
       const response = await portfolioProvider(address)
       setPortfolio(response)
+      setIsLoading(false)
     }
 
     load()
@@ -52,51 +55,71 @@ export default function PortfolioPage() {
           <div className="phead">
             <div className="plabel">Portfolio</div>
             <div className="pvalue">
-              ${formatBalance(portfolio.total)}
+              {isLoading ? "—" : `$${formatBalance(portfolio.total)}`}
             </div>
             <div className="pbreakdown">
-              <span>${formatBalance(portfolio.assetsTotal)}</span> assets &nbsp;·&nbsp; <span className="bad">−${formatBalance(portfolio.debtTotal)}</span> debt
+              {isLoading ? (<>&nbsp;</>) : 
+                <>
+                  <span>${formatBalance(portfolio.assetsTotal)}</span> assets
+                  &nbsp;·&nbsp;
+                  <span className="bad">−${formatBalance(portfolio.debtTotal)}</span> debt
+                </>
+              }
             </div>
           </div>
-          <button className="rebal-btn" onClick={() => navigate(
-            `/portfolio/${address}/rebalancing`
-          )}>
-            <i className="ti ti-adjustments-horizontal" aria-hidden="true" style={{ fontSize: "13px" }}></i>Rebalance
-          </button>
+          {
+            !isLoading &&
+            <button className="rebal-btn" onClick={() => navigate(
+              `/portfolio/${address}/rebalancing`
+            )}>
+              <i className="ti ti-adjustments-horizontal" aria-hidden="true" style={{ fontSize: "13px" }}></i>Rebalance
+            </button>
+          }
         </div>
 
         <div className="metrics">
+
           <div className="mc">
             <div className="ml">Assets</div>
             <div className="mv">
-              ${formatBalance(portfolio.assetsTotal)}
+              {isLoading ? "—" : `$${formatBalance(portfolio.assetsTotal)}`}
             </div>
             <div className="ms">
-              {(portfolio.assetsCount == 1 ? `1 position` : `${portfolio.assetsCount} positions`)}
+              {isLoading ? (<>&nbsp;</>) : (portfolio.assetsCount == 1 ? `1 position` : `${portfolio.assetsCount} positions`)}
             </div>
           </div>
+
           <div className="mc">
             <div className="ml">Debt</div>
             <div className="mv"
               style={{
-                color: portfolio.debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
+                color: isLoading ? "" : portfolio.debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
               }}
-            >${formatBalance(portfolio.debtTotal)}</div>
-            <div className="ms">Aave Protocol</div>
+            >
+              {isLoading ? '—' : `$${formatBalance(portfolio.debtTotal)}`}
+            </div>
+            <div className="ms">{isLoading ? (<>&nbsp;</>) : "Aave Protocol"}</div>
           </div>
+
           <div className="mc">
             <div className="ml">LTV ratio</div>
-            <div className="mv">{ltv.value.toFixed(2)}%</div>
+            <div className="mv">{isLoading ? "—" : `${ltv.value.toFixed(2)}%`}</div>
             <div className="ms" style={{ color: ltv.color }}>{ltv.hint}</div>
           </div>
+
           <div className="mc">
             <div className="ml">24h change</div>
-            <div className="mv ok">+$0.00</div>
-            <div className="ms ok">+0.00%</div>
+            <div className={`mv ${!isLoading && "ok"}`}>
+              {isLoading ? "—" : "+$0.00"}
+            </div>
+            <div className="ms ok">
+              {isLoading ? (<>&nbsp;</>) : "+0.00%"}
+            </div>
           </div>
+
         </div>
 
-        <PortfolioTable portfolio={portfolio} />
+        {isLoading ? <LoaderBox /> : <PortfolioTable portfolio={portfolio} />}
 
       </main>
     </>
