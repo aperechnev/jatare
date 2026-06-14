@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom"
 import Layout from "./layout/Layout"
 
 import FrontPage from "./pages/FrontPage"
-import Portfolio from "./pages/Portfolio"
+import Portfolio from "./pages/Portfolio/Portfolio"
 import Rebalancing from "./pages/Rebalancing/Rebalancing"
 
 function App() {

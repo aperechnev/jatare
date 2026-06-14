@@ -2,7 +2,7 @@ import './Portfolio.css'
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
-import PortfolioTable from "@/components/PortfolioTable"
+import PortfolioTable from "@/pages/Portfolio/PortfolioTable"
 import { makeDebtInfo } from '@/types/DebtInfo'
 import { formatBalance } from '@/utils/formatting'
 import type { Portfolio } from '@/providers/portfolio'
