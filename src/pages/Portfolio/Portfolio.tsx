@@ -7,7 +7,7 @@ import { makeDebtInfo } from '@/types/DebtInfo'
 import { formatBalance } from '@/utils/formatting'
 import type { Portfolio } from '@/providers/portfolio'
 import { portfolioProvider, defaultPortfolio } from '@/providers/portfolio'
-import LoaderBox from './LoaderBox'
+import LoaderBox from '@/components/LoaderBox/LoaderBox'
 
 export default function PortfolioPage() {
   const navigate = useNavigate()
@@ -58,7 +58,7 @@ export default function PortfolioPage() {
               {isLoading ? "—" : `$${formatBalance(portfolio.total)}`}
             </div>
             <div className="pbreakdown">
-              {isLoading ? (<>&nbsp;</>) : 
+              {isLoading ? (<>&nbsp;</>) :
                 <>
                   <span>${formatBalance(portfolio.assetsTotal)}</span> assets
                   &nbsp;·&nbsp;
@@ -119,7 +119,16 @@ export default function PortfolioPage() {
 
         </div>
 
-        {isLoading ? <LoaderBox /> : <PortfolioTable portfolio={portfolio} />}
+        {
+          isLoading
+            ? <LoaderBox
+              title='Fetching portfolio…'
+              description='Scanning Ethereum and 3 more networks'
+            />
+            : <PortfolioTable
+              portfolio={portfolio}
+            />
+        }
 
       </main>
     </>
