@@ -8,6 +8,7 @@ import { formatBalance } from '@/utils/formatting'
 import type { Portfolio } from '@/providers/portfolio'
 import { portfolioProvider, defaultPortfolio } from '@/providers/portfolio'
 import LoaderBox from '@/components/LoaderBox/LoaderBox'
+import EmptyBox from './EmptyBox'
 
 export default function PortfolioPage() {
   const navigate = useNavigate()
@@ -15,6 +16,7 @@ export default function PortfolioPage() {
   const address = params.address ?? ""
 
   const [isLoading, setIsLoading] = useState(true)
+  const [isEmpty, setIsEmpty] = useState(false)
   const [portfolio, setPortfolio] = useState<Portfolio>(defaultPortfolio)
 
   const [ltv, setLtv] = useState<{ value: number, hint: string, color: string }>({
@@ -23,13 +25,15 @@ export default function PortfolioPage() {
     color: "transparent"
   })
 
-  useEffect(() => {
-    async function load() {
-      const response = await portfolioProvider(address)
-      setPortfolio(response)
-      setIsLoading(false)
-    }
+  async function load() {
+    setIsLoading(true)
+    const response = await portfolioProvider(address)
+    setPortfolio(response)
+    setIsEmpty(response.assetList.length + response.debtList.length == 0)
+    setIsLoading(false)
+  }
 
+  useEffect(() => {
     load()
   }, [address])
 
@@ -58,7 +62,7 @@ export default function PortfolioPage() {
               {isLoading ? "—" : `$${formatBalance(portfolio.total)}`}
             </div>
             <div className="pbreakdown">
-              {isLoading ? (<>&nbsp;</>) :
+              {isLoading || isEmpty ? (<>&nbsp;</>) :
                 <>
                   <span>${formatBalance(portfolio.assetsTotal)}</span> assets
                   &nbsp;·&nbsp;
@@ -68,7 +72,7 @@ export default function PortfolioPage() {
             </div>
           </div>
           {
-            !isLoading &&
+            !(isLoading || isEmpty) &&
             <button className="rebal-btn" onClick={() => navigate(
               `/portfolio/${address}/rebalancing`
             )}>
@@ -85,7 +89,9 @@ export default function PortfolioPage() {
               {isLoading ? "—" : `$${formatBalance(portfolio.assetsTotal)}`}
             </div>
             <div className="ms">
-              {isLoading ? (<>&nbsp;</>) : (portfolio.assetsCount == 1 ? `1 position` : `${portfolio.assetsCount} positions`)}
+              {isLoading || isEmpty
+                ? (<>&nbsp;</>) : (portfolio.assetsCount == 1 ? `1 position`
+                  : `${portfolio.assetsCount} positions`)}
             </div>
           </div>
 
@@ -93,27 +99,27 @@ export default function PortfolioPage() {
             <div className="ml">Debt</div>
             <div className="mv"
               style={{
-                color: isLoading ? "" : portfolio.debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
+                color: isLoading || isEmpty ? "" : portfolio.debtTotal > 0 ? 'var(--color-assets-red)' : 'var(--color-assets-green)'
               }}
             >
-              {isLoading ? '—' : `$${formatBalance(portfolio.debtTotal)}`}
+              {isLoading || isEmpty ? '—' : `$${formatBalance(portfolio.debtTotal)}`}
             </div>
-            <div className="ms">{isLoading ? (<>&nbsp;</>) : "Aave Protocol"}</div>
+            <div className="ms">{isLoading || isEmpty ? (<>&nbsp;</>) : "Aave Protocol"}</div>
           </div>
 
           <div className="mc">
             <div className="ml">LTV ratio</div>
-            <div className="mv">{isLoading ? "—" : `${ltv.value.toFixed(2)}%`}</div>
+            <div className="mv">{isLoading || isEmpty ? "—" : `${ltv.value.toFixed(2)}%`}</div>
             <div className="ms" style={{ color: ltv.color }}>{ltv.hint}</div>
           </div>
 
           <div className="mc">
             <div className="ml">24h change</div>
-            <div className={`mv ${!isLoading && "ok"}`}>
-              {isLoading ? "—" : "+$0.00"}
+            <div className={`mv ${!(isLoading || isEmpty) && "ok"}`}>
+              {isLoading || isEmpty ? "—" : "+$0.00"}
             </div>
             <div className="ms ok">
-              {isLoading ? (<>&nbsp;</>) : "+0.00%"}
+              {isLoading || isEmpty ? (<>&nbsp;</>) : "+0.00%"}
             </div>
           </div>
 
@@ -125,9 +131,9 @@ export default function PortfolioPage() {
               title='Fetching portfolio…'
               description='Scanning Ethereum and 3 more networks'
             />
-            : <PortfolioTable
-              portfolio={portfolio}
-            />
+            : isEmpty
+              ? <EmptyBox address={address} onTryAgain={load} />
+              : <PortfolioTable portfolio={portfolio} />
         }
 
       </main>
