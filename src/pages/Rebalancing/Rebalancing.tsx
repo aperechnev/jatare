@@ -2,33 +2,36 @@ import './Rebalancing.css'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import RebalancingRow from './RebalancingRow'
-import TradeRow from './TradeRow'
+import TradeRow, { DummyTradeRow } from './TradeRow'
 import { portfolioProvider, defaultPortfolio } from '@/providers/portfolio'
 import type { Portfolio, PortfolioAsset } from '@/providers/portfolio'
+import LoaderBox from '@/components/LoaderBox/LoaderBox'
 
 export default function RebalancingPage() {
   const navigate = useNavigate()
   const params = useParams<{ address: string }>()
   const address = params.address ?? ""
+  const [isLoading, setIsLoading] = useState(true)
   const [portfolio, setPortfolio] = useState<Portfolio>(defaultPortfolio)
-
-  const [targetList, setTargetList] = useState<Record<string, number>>(
-    Object.fromEntries(
-      portfolio.assetList.map(a => [a.symbol, 0])
-    )
-  )
-  const [targetsSummary, setTargetsSummary] = useState(0)
+  const [targetList, setTargetList] = useState<Record<string, number>>({})
+  const [targetsSummary, setTargetsSummary] = useState(100)
 
   useEffect(() => {
     async function load() {
       const portfolio = await portfolioProvider(address)
       setPortfolio(portfolio)
+      setIsLoading(false)
     }
 
     load()
   }, [])
 
   useEffect(() => {
+    if (Object.values(targetList).length == 0) {
+      setTargetsSummary(100)
+      return
+    }
+
     setTargetsSummary(
       Object.values(targetList)
         .reduce((sum, value) => sum + value, 0)
@@ -48,39 +51,60 @@ export default function RebalancingPage() {
         <div className="phead">
           <div className="plabel">Portfolio settings</div>
           <div className="ptitle">Rebalancing targets</div>
-          <div className="psub">Drag to set your target allocation. Trades update automatically.</div>
+          <div className="psub">
+            {isLoading
+              ? "Loading your portfolio data…"
+              : "Drag to set your target allocation. Trades update automatically."
+            }
+          </div>
         </div>
       </div>
 
-      <div
-        id="warnBox"
-        className="warn"
-        style={{
-          display: (targetsSummary == 100 ? 'none' : '')
-        }}
-      >
-        Allocations total <span id="warnSum">{targetsSummary}</span>% — adjust to reach 100%
-      </div>
-
-      <div id="rows">
-        {portfolio.assetList.map((a: PortfolioAsset) => (
-          <RebalancingRow
-            total={portfolio.assetsTotal}
-            asset={a}
-            onTargetChange={t => {
-              setTargetList(prev => ({
-                ...prev,
-                [a.symbol]: t
-              }))
-            }}
+      {
+        isLoading
+          ? <LoaderBox
+            title='Fetching positions…'
+            description='Scanning your assets across all networks'
           />
-        ))}
-      </div>
+          : (
+            <>
+              <div
+                id="warnBox"
+                className="warn"
+                style={{
+                  display: (targetsSummary == 100 ? 'none' : '')
+                }}
+              >
+                Allocations total <span id="warnSum">{targetsSummary}</span>% — adjust to reach 100%
+              </div>
 
-      <div className="summary">
+              <div id="rows">
+                {portfolio.assetList.map((a: PortfolioAsset) => (
+                  <RebalancingRow
+                    total={portfolio.assetsTotal}
+                    asset={a}
+                    onTargetChange={t => {
+                      setTargetList(prev => ({
+                        ...prev,
+                        [a.symbol]: t
+                      }))
+                    }}
+                  />
+                ))}
+              </div>
+            </>
+
+          )
+      }
+
+      <div className={`summary ${isLoading ? "disabled" : ""}`}>
         <div className="sum-hd">
           <span className="sum-title">Trade summary</span>
-          <span className="sum-total">Total: <strong id="totalPct">{targetsSummary.toFixed(1)}%</strong></span>
+          <span className="sum-total">
+            {isLoading
+              ? ""
+              : <>Total: <strong id="totalPct">{targetsSummary.toFixed(1)}%</strong></>}
+          </span>
         </div>
         <table>
           <thead><tr>
@@ -91,13 +115,22 @@ export default function RebalancingPage() {
             <th style={{ width: "26%" }}>Action</th>
           </tr></thead>
           <tbody id="tbl">
-            {portfolio.assetList.map((a: PortfolioAsset) => (
-              <TradeRow
-                asset={a}
-                target={targetList[a.symbol] ?? 0}
-                total={portfolio.assetsTotal}
-              />
-            ))}
+            {
+              isLoading
+                ? <>
+                  <DummyTradeRow />
+                  <DummyTradeRow />
+                  <DummyTradeRow />
+                </>
+                : portfolio.assetList.map((a: PortfolioAsset) => (
+                  <TradeRow
+                    asset={a}
+                    target={targetList[a.symbol] ?? 0}
+                    total={portfolio.assetsTotal}
+                  />
+                ))
+            }
+
           </tbody>
         </table>
       </div>

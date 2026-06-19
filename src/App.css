@@ -23,6 +23,10 @@ p {
   font-size: 16px;
 }
 
+.disabled {
+  opacity: 0.35;
+}
+
 .logo {
   color: var(--color-brand);
   font-weight: 600;

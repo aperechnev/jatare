@@ -1,6 +1,18 @@
 import type { PortfolioAsset } from "@/providers/portfolio"
 import { formatBalance } from "@/utils/formatting"
 
+export function DummyTradeRow() {
+  return (
+    <tr>
+      <td style={{ fontWeight: 500 }}>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+    </tr>
+  )
+}
+
 export default function TradeRow(
   { asset, target, total }: {
     asset: PortfolioAsset,
