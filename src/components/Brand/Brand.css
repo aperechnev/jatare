@@ -1,0 +1,35 @@
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #e03a2f;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+    padding: 4px;
+    flex-shrink: 0;
+  }
+
+  .mark span {
+    border-radius: 1.5px;
+    background: #fff;
+  }
+
+  .mark span:nth-child(2),
+  .mark span:nth-child(3) {
+    opacity: .55;
+  }
+
+  .wordmark {
+    font-size: var(--font-heading-lg-size);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    letter-spacing: -.3px;
+  }
+}

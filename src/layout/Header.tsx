@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { injected } from "wagmi/connectors"
 import { Link } from "react-router-dom"
+import Brand from '@/components/Brand/Brand'
 
 
 export default function Header() {
@@ -81,9 +82,7 @@ export default function Header() {
       <div className="h-16 flex items-center justify-between">
 
         <Link to="/">
-          <h1 className="logo nav-logo">
-            Jatare
-          </h1>
+          <Brand />
         </Link>
 
         <div className="relative">
